@@ -14,7 +14,7 @@ export function ViewModeToggle({ value, onChange }: Props) {
   const modes: { value: ViewMode; label: string }[] = [
     { value: "weeks", label: t.weeks },
     { value: "months", label: t.months },
-    { value: "years", label: t.years },
+    { value: "years", label: t.yearsView },
   ];
 
   return (

@@ -7,7 +7,6 @@ import {
   Check,
   PencilSimple,
   Plus,
-  Star,
   Trash,
   X,
 } from "@phosphor-icons/react";
@@ -164,24 +163,7 @@ export function MilestoneEditor({ milestones, onChange, birthDate }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-sm font-medium text-zinc-500 dark:text-zinc-400">
-          <Star size={16} weight="fill" />
-          {t.milestones} ({milestones.length})
-        </div>
-        {!adding && (
-          <button
-            type="button"
-            onClick={() => { setAdding(true); setEditingId(null); }}
-            className="flex items-center gap-1 rounded-md border border-dashed border-zinc-300 px-2.5 py-1 text-xs text-zinc-400 transition-colors hover:border-zinc-400 hover:text-zinc-600 dark:border-zinc-600 dark:text-zinc-500 dark:hover:border-zinc-500 dark:hover:text-zinc-300"
-          >
-            <Plus size={12} weight="bold" />
-            {t.addMilestone}
-          </button>
-        )}
-      </div>
-
+    <div>
       {/* Milestone list */}
       {milestones.length > 0 && (
         <div className="mb-3 flex flex-wrap gap-2">
@@ -234,7 +216,7 @@ export function MilestoneEditor({ milestones, onChange, birthDate }: Props) {
       )}
 
       {/* Add form */}
-      {adding && (
+      {adding ? (
         <MilestoneForm
           initial={{
             label: "",
@@ -248,10 +230,19 @@ export function MilestoneEditor({ milestones, onChange, birthDate }: Props) {
           placeholderLabel={t.milestonePlaceholder}
           dateRangeLabel={t.dateRange}
         />
+      ) : (
+        <button
+          type="button"
+          onClick={() => { setAdding(true); setEditingId(null); }}
+          className="flex items-center gap-1 rounded-md border border-dashed border-zinc-300 px-2.5 py-1 text-xs text-zinc-400 transition-colors hover:border-zinc-400 hover:text-zinc-600 dark:border-zinc-600 dark:text-zinc-500 dark:hover:border-zinc-500 dark:hover:text-zinc-300"
+        >
+          <Plus size={12} weight="bold" />
+          {t.addMilestone}
+        </button>
       )}
 
       {milestones.length === 0 && !adding && (
-        <p className="text-center text-xs text-zinc-400 dark:text-zinc-500">
+        <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
           {t.noMilestones}
         </p>
       )}
