@@ -13,6 +13,7 @@ export const hi: Translations = {
   view: "दृश्य",
   weeks: "सप्ताह",
   months: "महीने",
+  yearsView: "वर्ष",
 
   age: "उम्र",
   daysLived: "जीवित दिन",
@@ -41,11 +42,29 @@ export const hi: Translations = {
   dateRange: "तारीख सीमा (उदा: विश्वविद्यालय, काम...)",
   noMilestones: "अभी तक कोई मील का पत्थर नहीं",
 
+  dotShape: "आकार",
+
+  funStats: "रोचक आँकड़े",
+  heartbeats: "अनुमानित दिल की धड़कनें",
+  breaths: "अनुमानित साँसें",
+  hoursSlept: "सोने के घंटे",
+  fullMoons: "अनुभव की गई पूर्णिमाएँ",
+
+  keyboardShortcuts: "कीबोर्ड शॉर्टकट",
+  shortcutWeeks: "सप्ताह दृश्य",
+  shortcutMonths: "महीना दृश्य",
+  shortcutYears: "वर्ष दृश्य",
+  shortcutHelp: "यह सहायता दिखाएं/छुपाएं",
+  shortcutClose: "पैनल बंद करें",
+
   exportChart: "चार्ट निर्यात करें",
   shareLink: "लिंक साझा करें",
   linkCopied: "लिंक कॉपी किया गया",
   sharedView: "साझा दृश्य",
   toggleTheme: "थीम बदलें",
+  themeSystem: "सिस्टम थीम",
+  themeLight: "हल्की थीम",
+  themeDark: "गहरी थीम",
   settings: "सेटिंग्स",
 
   pageTitle: "dot life - अपने जीवन को बिंदुओं में देखें",

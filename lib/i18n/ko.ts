@@ -13,6 +13,7 @@ export const ko: Translations = {
   view: "보기",
   weeks: "주",
   months: "월",
+  yearsView: "년",
 
   age: "나이",
   daysLived: "살아온 일수",
@@ -41,11 +42,29 @@ export const ko: Translations = {
   dateRange: "기간 (예: 대학교, 직장...)",
   noMilestones: "아직 이정표가 없습니다",
 
+  dotShape: "모양",
+
+  funStats: "재미있는 통계",
+  heartbeats: "추정 심박수",
+  breaths: "추정 호흡수",
+  hoursSlept: "수면 시간",
+  fullMoons: "경험한 보름달",
+
+  keyboardShortcuts: "키보드 단축키",
+  shortcutWeeks: "주 보기",
+  shortcutMonths: "월 보기",
+  shortcutYears: "연 보기",
+  shortcutHelp: "도움말 표시/숨기기",
+  shortcutClose: "패널 닫기",
+
   exportChart: "차트 내보내기",
   shareLink: "링크 공유",
   linkCopied: "링크 복사됨",
   sharedView: "공유 보기",
   toggleTheme: "테마 변경",
+  themeSystem: "시스템 테마",
+  themeLight: "밝은 테마",
+  themeDark: "어두운 테마",
   settings: "설정",
 
   pageTitle: "dot life - 당신의 인생을 점으로 시각화",

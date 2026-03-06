@@ -13,6 +13,7 @@ export const ja: Translations = {
   view: "表示",
   weeks: "週",
   months: "月",
+  yearsView: "年",
 
   age: "年齢",
   daysLived: "生きた日数",
@@ -41,11 +42,29 @@ export const ja: Translations = {
   dateRange: "期間（例：大学、仕事...）",
   noMilestones: "マイルストーンはまだありません",
 
+  dotShape: "形状",
+
+  funStats: "おもしろ統計",
+  heartbeats: "推定心拍数",
+  breaths: "推定呼吸数",
+  hoursSlept: "睡眠時間",
+  fullMoons: "経験した満月",
+
+  keyboardShortcuts: "キーボードショートカット",
+  shortcutWeeks: "週表示",
+  shortcutMonths: "月表示",
+  shortcutYears: "年表示",
+  shortcutHelp: "このヘルプを表示/非表示",
+  shortcutClose: "パネルを閉じる",
+
   exportChart: "画像を書き出す",
   shareLink: "リンクを共有",
   linkCopied: "リンクをコピーしました",
   sharedView: "共有ビュー",
   toggleTheme: "テーマ切替",
+  themeSystem: "システムテーマ",
+  themeLight: "ライトテーマ",
+  themeDark: "ダークテーマ",
   settings: "設定",
 
   pageTitle: "dot life - あなたの人生をドットで視覚化",

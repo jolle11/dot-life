@@ -13,6 +13,7 @@ export const ar: Translations = {
   view: "العرض",
   weeks: "أسابيع",
   months: "أشهر",
+  yearsView: "سنوات",
 
   age: "العمر",
   daysLived: "الأيام المعاشة",
@@ -41,11 +42,29 @@ export const ar: Translations = {
   dateRange: "نطاق التواريخ (مثال: الجامعة، العمل...)",
   noMilestones: "لا توجد محطات بعد",
 
+  dotShape: "الشكل",
+
+  funStats: "إحصائيات مثيرة",
+  heartbeats: "دقات القلب التقريبية",
+  breaths: "أنفاس تقريبية",
+  hoursSlept: "ساعات النوم",
+  fullMoons: "أقمار كاملة عشتها",
+
+  keyboardShortcuts: "اختصارات لوحة المفاتيح",
+  shortcutWeeks: "عرض الأسابيع",
+  shortcutMonths: "عرض الأشهر",
+  shortcutYears: "عرض السنوات",
+  shortcutHelp: "إظهار/إخفاء هذه المساعدة",
+  shortcutClose: "إغلاق الأجزاء",
+
   exportChart: "تصدير الرسم",
   shareLink: "مشاركة الرابط",
   linkCopied: "تم نسخ الرابط",
   sharedView: "عرض مشترك",
   toggleTheme: "تغيير المظهر",
+  themeSystem: "مظهر النظام",
+  themeLight: "المظهر الفاتح",
+  themeDark: "المظهر الداكن",
   settings: "الإعدادات",
 
   pageTitle: "dot life - تصوّر حياتك بالنقاط",

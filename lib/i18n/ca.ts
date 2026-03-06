@@ -9,10 +9,11 @@ export const ca: Translations = {
 
   birthDate: "Data de naixement",
   lifeExpectancy: "Esperança de vida:",
-  years: "anys",
+  years: "Anys",
   view: "Vista",
   weeks: "Setmanes",
   months: "Mesos",
+  yearsView: "Anys",
 
   age: "Edat",
   daysLived: "Dies viscuts",
@@ -41,11 +42,29 @@ export const ca: Translations = {
   dateRange: "Rang de dates (ex: universitat, feina...)",
   noMilestones: "No hi ha fites encara",
 
+  dotShape: "Forma",
+
+  funStats: "Estadístiques curioses",
+  heartbeats: "Batecs estimats",
+  breaths: "Respiracions estimades",
+  hoursSlept: "Hores dormides",
+  fullMoons: "Llunes plenes viscudes",
+
+  keyboardShortcuts: "Dreceres de teclat",
+  shortcutWeeks: "Vista setmanes",
+  shortcutMonths: "Vista mesos",
+  shortcutYears: "Vista anys",
+  shortcutHelp: "Mostrar/ocultar aquesta ajuda",
+  shortcutClose: "Tancar panells",
+
   exportChart: "Exportar gràfic",
   shareLink: "Compartir enllaç",
   linkCopied: "Enllaç copiat",
   sharedView: "Vista compartida",
   toggleTheme: "Canviar tema",
+  themeSystem: "Tema del sistema",
+  themeLight: "Tema clar",
+  themeDark: "Tema fosc",
   settings: "Ajustos",
 
   pageTitle: "dot life - Visualitza la teva vida en punts",

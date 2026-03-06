@@ -13,6 +13,7 @@ export const fr: Translations = {
   view: "Vue",
   weeks: "Semaines",
   months: "Mois",
+  yearsView: "Années",
 
   age: "Âge",
   daysLived: "Jours vécus",
@@ -41,11 +42,29 @@ export const fr: Translations = {
   dateRange: "Plage de dates (ex : université, travail...)",
   noMilestones: "Aucun jalon pour le moment",
 
+  dotShape: "Forme",
+
+  funStats: "Statistiques curieuses",
+  heartbeats: "Battements estimés",
+  breaths: "Respirations estimées",
+  hoursSlept: "Heures dormies",
+  fullMoons: "Pleines lunes vécues",
+
+  keyboardShortcuts: "Raccourcis clavier",
+  shortcutWeeks: "Vue semaines",
+  shortcutMonths: "Vue mois",
+  shortcutYears: "Vue années",
+  shortcutHelp: "Afficher/masquer cette aide",
+  shortcutClose: "Fermer les panneaux",
+
   exportChart: "Exporter le graphique",
   shareLink: "Partager le lien",
   linkCopied: "Lien copié",
   sharedView: "Vue partagée",
   toggleTheme: "Changer le thème",
+  themeSystem: "Thème système",
+  themeLight: "Thème clair",
+  themeDark: "Thème sombre",
   settings: "Paramètres",
 
   pageTitle: "dot life - Visualisez votre vie en points",

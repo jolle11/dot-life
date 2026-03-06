@@ -13,6 +13,7 @@ export const zh: Translations = {
   view: "视图",
   weeks: "周",
   months: "月",
+  yearsView: "年",
 
   age: "年龄",
   daysLived: "已活天数",
@@ -41,11 +42,29 @@ export const zh: Translations = {
   dateRange: "日期范围（如：大学、工作...）",
   noMilestones: "还没有里程碑",
 
+  dotShape: "形状",
+
+  funStats: "趣味统计",
+  heartbeats: "估算心跳次数",
+  breaths: "估算呼吸次数",
+  hoursSlept: "睡眠小时数",
+  fullMoons: "经历的满月次数",
+
+  keyboardShortcuts: "键盘快捷键",
+  shortcutWeeks: "周视图",
+  shortcutMonths: "月视图",
+  shortcutYears: "年视图",
+  shortcutHelp: "显示/隐藏此帮助",
+  shortcutClose: "关闭面板",
+
   exportChart: "导出图表",
   shareLink: "分享链接",
   linkCopied: "链接已复制",
   sharedView: "共享视图",
   toggleTheme: "切换主题",
+  themeSystem: "跟随系统",
+  themeLight: "浅色主题",
+  themeDark: "深色主题",
   settings: "设置",
 
   pageTitle: "dot life - 用圆点可视化你的人生",

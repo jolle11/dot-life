@@ -14,6 +14,7 @@ export interface Translations {
   view: string;
   weeks: string;
   months: string;
+  yearsView: string;
 
   // Stats
   age: string;
@@ -45,12 +46,33 @@ export interface Translations {
   dateRange: string;
   noMilestones: string;
 
+  // Dot shape
+  dotShape: string;
+
+  // Fun stats
+  funStats: string;
+  heartbeats: string;
+  breaths: string;
+  hoursSlept: string;
+  fullMoons: string;
+
+  // Keyboard shortcuts
+  keyboardShortcuts: string;
+  shortcutWeeks: string;
+  shortcutMonths: string;
+  shortcutYears: string;
+  shortcutHelp: string;
+  shortcutClose: string;
+
   // Actions
   exportChart: string;
   shareLink: string;
   linkCopied: string;
   sharedView: string;
   toggleTheme: string;
+  themeSystem: string;
+  themeLight: string;
+  themeDark: string;
   settings: string;
 
   // Page
