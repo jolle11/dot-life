@@ -7,6 +7,7 @@ const defaultConfig: LifeConfig = {
   lifeExpectancy: 80,
   viewMode: "weeks",
   milestones: [],
+  dotShape: "circle",
 };
 
 export function loadConfig(): LifeConfig {

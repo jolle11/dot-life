@@ -112,6 +112,7 @@ export function shareDataToConfig(data: ShareData) {
     lifeExpectancy: data.lifeExpectancy,
     viewMode: data.viewMode,
     milestones,
+    dotShape: "circle" as const,
   };
 }
 

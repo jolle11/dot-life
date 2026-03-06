@@ -9,7 +9,7 @@ import {
   getTotalUnits,
 } from "@/lib/calculations";
 import { useT } from "@/lib/i18n";
-import type { Milestone, ViewMode } from "@/lib/types";
+import type { DotShape, Milestone, ViewMode } from "@/lib/types";
 import { memo, useMemo, useState } from "react";
 
 interface Props {
@@ -17,6 +17,7 @@ interface Props {
   lifeExpectancy: number;
   viewMode: ViewMode;
   milestones: Milestone[];
+  dotShape?: DotShape;
   onDotClick?: (date: Date) => void;
   dateLocale?: string;
 }
@@ -40,10 +41,17 @@ function dotBackground(milestones: Milestone[]): React.CSSProperties | undefined
   return { background: `conic-gradient(${stops})` };
 }
 
+function dotShapeStyle(shape: DotShape, sizeClass: string): { className: string } {
+  if (shape === "square") return { className: `${sizeClass} rounded-none` };
+  if (shape === "diamond") return { className: `${sizeClass} rounded-none rotate-45` };
+  return { className: `${sizeClass} rounded-full` };
+}
+
 const Dot = memo(function Dot({
   dot,
   index,
   sizeClass,
+  dotShape,
   isHovered,
   onMouseEnter,
   onMouseLeave,
@@ -58,6 +66,7 @@ const Dot = memo(function Dot({
   dot: DotData;
   index: number;
   sizeClass: string;
+  dotShape: DotShape;
   isHovered: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -70,6 +79,8 @@ const Dot = memo(function Dot({
   yearLabel: string;
 }) {
   const hasMilestones = dot.milestones.length > 0;
+  const bgStyle = dotBackground(dot.milestones);
+  const shapeInfo = dotShapeStyle(dotShape, sizeClass);
 
   return (
     <div
@@ -79,14 +90,14 @@ const Dot = memo(function Dot({
       onClick={onClick}
     >
       <div
-        className={`${sizeClass} rounded-full transition-transform hover:scale-150 ${
+        className={`${shapeInfo.className} transition-transform hover:scale-150 ${
           dot.isLived
             ? hasMilestones
               ? ""
               : "bg-zinc-800 dark:bg-zinc-200"
             : "bg-zinc-200 dark:bg-zinc-700"
         }`}
-        style={dotBackground(dot.milestones)}
+        style={bgStyle}
       />
 
       {isHovered && (
@@ -137,6 +148,7 @@ export function DotGrid({
   lifeExpectancy,
   viewMode,
   milestones,
+  dotShape = "circle",
   onDotClick,
   dateLocale = "es-ES",
 }: Props) {
@@ -224,6 +236,7 @@ export function DotGrid({
               dot={dot}
               index={i}
               sizeClass={sizeClasses[dotSize]}
+              dotShape={dotShape}
               isHovered={hoveredIndex === i}
               onMouseEnter={() => setHoveredIndex(i)}
               onMouseLeave={() => setHoveredIndex(null)}

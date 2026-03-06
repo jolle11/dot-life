@@ -1,4 +1,5 @@
 export type ViewMode = "weeks" | "months" | "years";
+export type DotShape = "circle" | "square" | "diamond";
 
 export interface Milestone {
   id: string;
@@ -13,4 +14,5 @@ export interface LifeConfig {
   lifeExpectancy: number;
   viewMode: ViewMode;
   milestones: Milestone[];
+  dotShape: DotShape;
 }
