@@ -81,17 +81,32 @@ export default function Home() {
     setExporting(true);
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     try {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const dataUrl = await toPng(gridRef.current, {
         backgroundColor:
           document.documentElement.classList.contains("dark")
             ? "#18181b"
             : "#ffffff",
-        pixelRatio: 2,
+        pixelRatio: isMobile ? 1 : 2,
       });
-      const link = document.createElement("a");
-      link.download = "dot-life.png";
-      link.href = dataUrl;
-      link.click();
+
+      // Convert data URL to blob for better mobile compatibility
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      const file = new File([blob], "dot-life.png", { type: "image/png" });
+
+      // Use Web Share API on mobile if available
+      if (isMobile && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file] });
+      } else {
+        // Desktop fallback: download via link
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.download = "dot-life.png";
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
     } finally {
       setExporting(false);
     }
