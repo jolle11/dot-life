@@ -1,0 +1,54 @@
+import type { Translations } from "./types";
+
+export const zh: Translations = {
+  welcomeDescription:
+    "用圆点可视化你的人生。每个圆点代表一周、一个月或一年。发现你已经活了多久，还剩多少。",
+  welcomeQuestion: "你的出生日期是？",
+  welcomeStart: "开始",
+  welcomeFooter: "你的数据保存在浏览器本地。",
+
+  birthDate: "出生日期",
+  lifeExpectancy: "预期寿命：",
+  years: "岁",
+  view: "视图",
+  weeks: "周",
+  months: "月",
+
+  age: "年龄",
+  daysLived: "已活天数",
+  weeksLived: "已活周数",
+  weeksRemaining: "剩余周数",
+  lifeLived: "已过人生",
+  nextBirthday: "下次生日",
+  timeLived: "已活时间",
+  timeRemaining: "剩余时间",
+  daysUnit: "天",
+
+  eachRowYear: (cols) => `每行 = 1年（${cols}周）`,
+  eachRowYearMonths: (cols) => `每行 = 1年（${cols}个月）`,
+  eachRowDecade: (cols) => `每行 = 10年（${cols}年）`,
+  weekLabel: "周",
+  monthLabel: "月",
+  yearLabel: "年",
+  lived: "已活",
+  toLive: "未来",
+
+  milestones: "里程碑",
+  addMilestone: "添加",
+  saveMilestone: "保存",
+  newMilestone: "新里程碑",
+  milestonePlaceholder: "里程碑名称...",
+  dateRange: "日期范围（如：大学、工作...）",
+  noMilestones: "还没有里程碑",
+
+  exportChart: "导出图表",
+  shareLink: "分享链接",
+  linkCopied: "链接已复制",
+  sharedView: "共享视图",
+  toggleTheme: "切换主题",
+  settings: "设置",
+
+  pageTitle: "dot life - 用圆点可视化你的人生",
+
+  localeName: "中文",
+};
