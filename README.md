@@ -1,61 +1,61 @@
 # dot life
 
-Visualiza tu vida en un grid de puntos. Cada punto representa una semana, un mes o un ano de tu vida.
+Visualize your life as a grid of dots. Each dot represents a week, a month, or a year of your life.
 
 **Live:** [dotlife.vercel.app](https://dotlife.vercel.app)
 
-## Que es
+## What is it
 
-Una aplicacion web que muestra tu vida como un grid interactivo de puntos. Introduces tu fecha de nacimiento, ajustas la esperanza de vida y ves de un vistazo cuanto has vivido y cuanto te queda.
+A web app that displays your life as an interactive dot grid. Enter your birth date, adjust your life expectancy, and see at a glance how much you've lived and how much is left.
 
-## Funcionalidades
+## Features
 
-- **Grid de vida** — Visualiza semanas, meses o anos como puntos. Los vividos se rellenan, los futuros quedan vacios.
-- **Milestones** — Marca momentos importantes en tu vida con colores. Click en cualquier punto para anadir uno rapido.
-- **Estadisticas** — Panel con datos sobre el tiempo vivido y restante.
-- **Compartir** — Genera un enlace para compartir tu grid con otros (vista de solo lectura).
-- **Exportar** — Descarga tu grid como imagen PNG.
-- **Tema claro/oscuro** — Respeta la preferencia del sistema con toggle manual.
-- **Multiidioma** — Disponible en 12 idiomas: ES, EN, CA, FR, DE, PT, IT, JA, KO, ZH, AR, HI.
-- **Persistencia local** — La configuracion se guarda en localStorage.
+- **Life grid** — View weeks, months, or years as dots. Lived ones are filled, future ones are empty.
+- **Milestones** — Mark important moments in your life with colors. Click any dot to quickly add one.
+- **Stats** — Panel showing data about time lived and remaining.
+- **Share** — Generate a link to share your grid with others (read-only view).
+- **Export** — Download your grid as a PNG image.
+- **Light/dark theme** — Respects system preference with manual toggle.
+- **Multilanguage** — Available in 12 languages: ES, EN, CA, FR, DE, PT, IT, JA, KO, ZH, AR, HI.
+- **Local persistence** — Configuration is saved in localStorage.
 
 ## Tech stack
 
-- **Next.js 16** con App Router y React 19
+- **Next.js 16** with App Router and React 19
 - **Tailwind CSS 4**
-- **Framer Motion** para animaciones
+- **Framer Motion** for animations
 - **Phosphor Icons**
-- **html-to-image** para la exportacion PNG
-- **Biome** para linting y formateo
-- **pnpm** como gestor de paquetes
+- **html-to-image** for PNG export
+- **Biome** for linting and formatting
+- **pnpm** as package manager
 
-## Desarrollo
+## Development
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-Abre [localhost:3000](http://localhost:3000).
+Open [localhost:3000](http://localhost:3000).
 
 ### Scripts
 
-| Comando | Descripcion |
+| Command | Description |
 | --- | --- |
-| `pnpm dev` | Servidor de desarrollo |
-| `pnpm build` | Build de produccion |
-| `pnpm start` | Sirve el build |
-| `pnpm lint` | Comprueba el codigo con Biome |
-| `pnpm format` | Formatea el codigo con Biome |
+| `pnpm dev` | Development server |
+| `pnpm build` | Production build |
+| `pnpm start` | Serve the build |
+| `pnpm lint` | Check code with Biome |
+| `pnpm format` | Format code with Biome |
 
-## Estructura
+## Structure
 
 ```
-app/           Paginas y layout (App Router)
-components/    Componentes React (DotGrid, StatsPanel, MilestoneEditor, etc.)
-lib/           Logica de negocio, tipos, i18n y utilidades
+app/           Pages and layout (App Router)
+components/    React components (DotGrid, StatsPanel, MilestoneEditor, etc.)
+lib/           Business logic, types, i18n, and utilities
 ```
 
-## Autor
+## Author
 
 Jordi Olle Balleste
