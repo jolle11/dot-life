@@ -36,6 +36,8 @@ export default function Home() {
   const [showHelp, setShowHelp] = useState(false);
   const [showMilestones, setShowMilestones] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
+  const swipeStartX = useRef<number | null>(null);
+  const swipeStartY = useRef<number | null>(null);
 
   useEffect(() => {
     // Check for shared URL first
@@ -83,6 +85,37 @@ export default function Home() {
     },
     [config],
   );
+
+  useEffect(() => {
+    if (sharedConfig !== null) return;
+    const handleTouchStart = (e: TouchEvent) => {
+      swipeStartX.current = e.touches[0].clientX;
+      swipeStartY.current = e.touches[0].clientY;
+    };
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (swipeStartX.current === null || swipeStartY.current === null) return;
+      const dx = e.changedTouches[0].clientX - swipeStartX.current;
+      const dy = Math.abs(e.changedTouches[0].clientY - swipeStartY.current);
+      // Ignore if more vertical than horizontal
+      if (dy > Math.abs(dx)) return;
+      // Swipe left from right edge → open drawer
+      if (!showControls && dx < -50 && swipeStartX.current > window.innerWidth - 60) {
+        setShowControls(true);
+      }
+      // Swipe right while drawer is open → close drawer
+      if (showControls && dx > 50) {
+        setShowControls(false);
+      }
+      swipeStartX.current = null;
+      swipeStartY.current = null;
+    };
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [showControls, sharedConfig]);
 
   useEffect(() => {
     if (!config?.birthDate) return;
@@ -255,7 +288,7 @@ export default function Home() {
                 type="button"
                 onClick={exportChart}
                 disabled={exporting}
-                className="rounded-lg border border-zinc-200 p-2 text-zinc-500 transition-colors hover:text-zinc-900 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-100"
+                className="hidden sm:inline-flex rounded-lg border border-zinc-200 p-2 text-zinc-500 transition-colors hover:text-zinc-900 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-100"
                 aria-label={t.exportChart}
               >
                 {exporting ? (
