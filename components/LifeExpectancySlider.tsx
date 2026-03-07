@@ -28,7 +28,7 @@ export function LifeExpectancySlider({ value, onChange }: Props) {
         max={120}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="accent-zinc-900 dark:accent-zinc-100"
+        className="w-full accent-zinc-900 dark:accent-zinc-100"
       />
       <div className="flex justify-between text-xs text-zinc-400">
         <span>50</span>

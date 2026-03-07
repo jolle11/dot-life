@@ -49,7 +49,7 @@ export function SettingsDrawer({ open, onClose, config, onUpdate, onShowHelp }: 
                 onClose();
               }
             }}
-            className="fixed right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col border-l border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+            className="fixed right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col overflow-hidden border-l border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-zinc-100 px-5 py-4 dark:border-zinc-800">
