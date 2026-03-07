@@ -115,6 +115,38 @@ export default function Home() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [config, update]);
 
+  useEffect(() => {
+    if (!config?.birthDate) return;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (showControls) return;
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+      const isRightEdge = touchStartX > window.innerWidth - 32;
+      const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+      const isSwipeLeft = deltaX < -50;
+      if (isRightEdge && isHorizontalSwipe && isSwipeLeft) {
+        setShowControls(true);
+      }
+    };
+
+    document.addEventListener("touchstart", handleTouchStart, { passive: true });
+    document.addEventListener("touchend", handleTouchEnd, { passive: true });
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [config?.birthDate, showControls]);
+
   const exportChart = useCallback(async () => {
     if (!gridRef.current || exporting) return;
     setExporting(true);
