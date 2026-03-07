@@ -67,35 +67,37 @@ export function SettingsDrawer({ open, onClose, config, onUpdate, onShowHelp }: 
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-6 overflow-y-auto px-5 py-5 flex-1">
-              <BirthDateInput
-                value={config.birthDate}
-                onChange={(birthDate) => onUpdate({ birthDate })}
-              />
-
-              <LifeExpectancySlider
-                value={config.lifeExpectancy}
-                onChange={(lifeExpectancy) => onUpdate({ lifeExpectancy })}
-              />
-
-              <div className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                  {t.view}
-                </span>
-                <ViewModeToggle
-                  value={config.viewMode}
-                  onChange={(viewMode) => onUpdate({ viewMode })}
+            <div className="flex-1 overflow-y-auto">
+              <div className="flex flex-col gap-6 px-5 py-5">
+                <BirthDateInput
+                  value={config.birthDate}
+                  onChange={(birthDate) => onUpdate({ birthDate })}
                 />
-              </div>
 
-              <div className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                  {t.dotShape}
-                </span>
-                <DotShapePicker
-                  value={config.dotShape ?? "circle"}
-                  onChange={(dotShape) => onUpdate({ dotShape })}
+                <LifeExpectancySlider
+                  value={config.lifeExpectancy}
+                  onChange={(lifeExpectancy) => onUpdate({ lifeExpectancy })}
                 />
+
+                <div className="flex flex-col gap-2">
+                  <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                    {t.view}
+                  </span>
+                  <ViewModeToggle
+                    value={config.viewMode}
+                    onChange={(viewMode) => onUpdate({ viewMode })}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                    {t.dotShape}
+                  </span>
+                  <DotShapePicker
+                    value={config.dotShape ?? "circle"}
+                    onChange={(dotShape) => onUpdate({ dotShape })}
+                  />
+                </div>
               </div>
             </div>
 
