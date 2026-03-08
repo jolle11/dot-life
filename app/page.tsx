@@ -192,6 +192,9 @@ export default function Home() {
             ? "#18181b"
             : "#ffffff",
         pixelRatio: isMobile ? 1 : 2,
+        width: gridRef.current.scrollWidth,
+        height: gridRef.current.scrollHeight,
+        style: { overflow: "hidden" },
       });
 
       // Convert data URL to blob for better mobile compatibility
