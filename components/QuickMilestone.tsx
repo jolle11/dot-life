@@ -1,6 +1,6 @@
 "use client";
 
-import { MILESTONE_COLORS } from "@/lib/colors";
+import { MILESTONE_COLORS, getColorName } from "@/lib/colors";
 import { formatDate } from "@/lib/calculations";
 import { useT } from "@/lib/i18n";
 import type { Milestone } from "@/lib/types";
@@ -62,7 +62,7 @@ export function QuickMilestone({ date, existingMilestones, onSave, onCancel, dat
               key={c.value}
               type="button"
               onClick={() => setColor(c.value)}
-              title={c.name}
+              title={getColorName(c, t)}
               className={`h-6 w-6 rounded-full transition-all ${
                 color === c.value
                   ? "ring-2 ring-offset-2 ring-offset-white scale-110 dark:ring-offset-zinc-900"

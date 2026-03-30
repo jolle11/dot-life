@@ -1,6 +1,6 @@
 "use client";
 
-import { MILESTONE_COLORS } from "@/lib/colors";
+import { MILESTONE_COLORS, getColorName } from "@/lib/colors";
 import { useT } from "@/lib/i18n";
 import type { Milestone } from "@/lib/types";
 import {
@@ -22,6 +22,7 @@ function ColorPicker({
   value,
   onChange,
 }: { value: string; onChange: (c: string) => void }) {
+  const t = useT();
   return (
     <div className="flex flex-wrap gap-3">
       {MILESTONE_COLORS.map((c) => (
@@ -29,7 +30,7 @@ function ColorPicker({
           key={c.value}
           type="button"
           onClick={() => onChange(c.value)}
-          title={c.name}
+          title={getColorName(c, t)}
           className={`h-6 w-6 rounded-full transition-all ${
             value === c.value
               ? "ring-2 ring-offset-2 ring-offset-white scale-110 dark:ring-offset-zinc-800"
