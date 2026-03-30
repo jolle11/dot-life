@@ -3,6 +3,7 @@
 import { MILESTONE_COLORS, getColorName } from "@/lib/colors";
 import { formatDate } from "@/lib/calculations";
 import { useT } from "@/lib/i18n";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 import type { Milestone } from "@/lib/types";
 import { Check, X } from "@phosphor-icons/react";
 import { useState } from "react";
@@ -17,6 +18,7 @@ interface Props {
 
 export function QuickMilestone({ date, existingMilestones, onSave, onCancel, dateLocale = "es-ES" }: Props) {
   const t = useT();
+  const trapRef = useFocusTrap<HTMLDivElement>();
   const nextColor = MILESTONE_COLORS[existingMilestones.length % MILESTONE_COLORS.length].value;
   const [label, setLabel] = useState("");
   const [color, setColor] = useState(nextColor);
@@ -32,8 +34,12 @@ export function QuickMilestone({ date, existingMilestones, onSave, onCancel, dat
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={onCancel}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" role="presentation" onClick={onCancel}>
       <div
+        ref={trapRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t.newMilestone}
         className="mx-4 w-full max-w-sm rounded-xl border border-zinc-200 bg-white p-4 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
         onClick={(e) => e.stopPropagation()}
       >
