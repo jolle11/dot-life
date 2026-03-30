@@ -35,7 +35,9 @@ export default function Home() {
   const [locale, setLocale] = useState<Locale>("es");
   const [showHelp, setShowHelp] = useState(false);
   const [showMilestones, setShowMilestones] = useState(false);
+  const [errorToast, setErrorToast] = useState<string | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const clearGridHoverRef = useRef<(() => void) | null>(null);
   const swipeStartX = useRef<number | null>(null);
   const swipeStartY = useRef<number | null>(null);
 
@@ -57,24 +59,33 @@ export default function Home() {
       document.documentElement.classList.add("dark");
     } else if (theme === "light") {
       document.documentElement.classList.remove("dark");
-    } else {
-      // system default: follow OS preference and keep watching for changes
-      const mq = window.matchMedia("(prefers-color-scheme: dark)");
-      document.documentElement.classList.toggle("dark", mq.matches);
-      const handler = (e: MediaQueryListEvent) => {
-        if (!localStorage.getItem("dot-life-theme")) {
-          document.documentElement.classList.toggle("dark", e.matches);
-        }
-      };
-      mq.addEventListener("change", handler);
     }
+
+    // system default: follow OS preference and keep watching for changes
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (!theme) {
+      document.documentElement.classList.toggle("dark", mq.matches);
+    }
+    const themeHandler = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem("dot-life-theme")) {
+        document.documentElement.classList.toggle("dark", e.matches);
+      }
+    };
+    mq.addEventListener("change", themeHandler);
 
     // Apply saved locale
     const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null;
     if (savedLocale && savedLocale in locales) {
       setLocale(savedLocale);
     }
+
+    return () => {
+      mq.removeEventListener("change", themeHandler);
+    };
   }, []);
+
+  const t = locales[locale];
+  const dateLocale = getDateLocale(locale);
 
   const update = useCallback(
     (partial: Partial<LifeConfig>) => {
@@ -148,41 +159,17 @@ export default function Home() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [config, update]);
 
-  useEffect(() => {
-    if (!config?.birthDate) return;
-    let touchStartX = 0;
-    let touchStartY = 0;
 
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-    };
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (showControls) return;
-      const touchEndX = e.changedTouches[0].clientX;
-      const touchEndY = e.changedTouches[0].clientY;
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = touchEndY - touchStartY;
-      const isRightEdge = touchStartX > window.innerWidth - 32;
-      const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
-      const isSwipeLeft = deltaX < -50;
-      if (isRightEdge && isHorizontalSwipe && isSwipeLeft) {
-        setShowControls(true);
-      }
-    };
-
-    document.addEventListener("touchstart", handleTouchStart, { passive: true });
-    document.addEventListener("touchend", handleTouchEnd, { passive: true });
-    return () => {
-      document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("touchend", handleTouchEnd);
-    };
-  }, [config?.birthDate, showControls]);
+  const showError = useCallback((msg: string) => {
+    setErrorToast(msg);
+    setTimeout(() => setErrorToast(null), 3000);
+  }, []);
 
   const exportChart = useCallback(async () => {
     if (!gridRef.current || exporting) return;
     setExporting(true);
+    // Clear any hovered tooltip so it doesn't appear in the exported image
+    clearGridHoverRef.current?.();
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     try {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -214,28 +201,31 @@ export default function Home() {
         link.click();
         URL.revokeObjectURL(url);
       }
+    } catch {
+      showError(t.exportError);
     } finally {
       setExporting(false);
     }
-  }, [exporting]);
+  }, [exporting, showError, t.exportError]);
 
   const handleShare = useCallback(async () => {
     if (!config || !config.birthDate) return;
-    const url = encodeShareURL(
-      parseLocalDate(config.birthDate),
-      config.lifeExpectancy,
-      config.viewMode,
-      config.milestones,
-    );
-    await navigator.clipboard.writeText(url);
-    setLinkCopied(true);
-    setTimeout(() => setLinkCopied(false), 2000);
-  }, [config]);
+    try {
+      const url = encodeShareURL(
+        parseLocalDate(config.birthDate),
+        config.lifeExpectancy,
+        config.viewMode,
+        config.milestones,
+      );
+      await navigator.clipboard.writeText(url);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    } catch {
+      showError(t.shareLinkError);
+    }
+  }, [config, showError, t.shareLinkError]);
 
   const isShared = sharedConfig !== null;
-
-  const t = locales[locale];
-  const dateLocale = getDateLocale(locale);
 
   useEffect(() => {
     document.title = t.pageTitle;
@@ -381,6 +371,7 @@ export default function Home() {
               dotShape={config.dotShape ?? "circle"}
               onDotClick={isShared ? undefined : (date) => setQuickMilestoneDate(date)}
               dateLocale={dateLocale}
+              clearHoverRef={clearGridHoverRef}
             />
           </div>
         </main>
@@ -456,6 +447,20 @@ export default function Home() {
             dateLocale={dateLocale}
           />
         )}
+
+        {/* Error toast */}
+        <AnimatePresence>
+          {errorToast && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700 shadow-lg dark:border-red-800 dark:bg-red-950 dark:text-red-300"
+            >
+              {errorToast}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </I18nProvider>
   );
