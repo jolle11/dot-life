@@ -21,7 +21,12 @@ export function encodeShareURL(
   milestones: Milestone[],
 ): string {
   const now = new Date();
-  const age = now.getFullYear() - birthDate.getFullYear();
+  // Precise age: subtract 1 if the birthday hasn't occurred yet this year
+  let age = now.getFullYear() - birthDate.getFullYear();
+  const monthDiff = now.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birthDate.getDate())) {
+    age--;
+  }
 
   const encodedMilestones = milestones.map((m) => {
     const mStart = parseLocalDate(m.date);
@@ -133,5 +138,8 @@ function unitToDate(birthDate: Date, unit: number, mode: ViewMode): Date {
 }
 
 function dateToString(d: Date): string {
-  return d.toISOString().split("T")[0];
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
