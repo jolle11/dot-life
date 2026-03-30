@@ -58,7 +58,9 @@ export const fr: Translations = {
   shortcutClose: "Fermer les panneaux",
 
   exportChart: "Exporter le graphique",
+  exportError: "Impossible d'exporter l'image",
   shareLink: "Partager le lien",
+  shareLinkError: "Impossible de copier le lien",
   linkCopied: "Lien copié",
   sharedView: "Vue partagée",
   toggleTheme: "Changer le thème",
@@ -69,5 +71,17 @@ export const fr: Translations = {
 
   pageTitle: "dot life - Visualisez votre vie en points",
 
+  colorRed: "Rouge",
+  colorOrange: "Orange",
+  colorYellow: "Jaune",
+  colorGreen: "Vert",
+  colorTeal: "Sarcelle",
+  colorBlue: "Bleu",
+  colorIndigo: "Indigo",
+  colorViolet: "Violet",
+  colorPink: "Rose",
+  colorCherry: "Cerise",
+  colorGray: "Gris",
+  colorSky: "Ciel",
   localeName: "Français",
 };

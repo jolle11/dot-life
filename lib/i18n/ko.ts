@@ -58,7 +58,9 @@ export const ko: Translations = {
   shortcutClose: "패널 닫기",
 
   exportChart: "차트 내보내기",
+  exportError: "이미지를 내보낼 수 없습니다",
   shareLink: "링크 공유",
+  shareLinkError: "링크를 복사할 수 없습니다",
   linkCopied: "링크 복사됨",
   sharedView: "공유 보기",
   toggleTheme: "테마 변경",
@@ -69,5 +71,17 @@ export const ko: Translations = {
 
   pageTitle: "dot life - 당신의 인생을 점으로 시각화",
 
+  colorRed: "빨강",
+  colorOrange: "주황",
+  colorYellow: "노랑",
+  colorGreen: "초록",
+  colorTeal: "청록",
+  colorBlue: "파랑",
+  colorIndigo: "남색",
+  colorViolet: "보라",
+  colorPink: "분홍",
+  colorCherry: "체리",
+  colorGray: "회색",
+  colorSky: "하늘",
   localeName: "한국어",
 };

@@ -66,7 +66,9 @@ export interface Translations {
 
   // Actions
   exportChart: string;
+  exportError: string;
   shareLink: string;
+  shareLinkError: string;
   linkCopied: string;
   sharedView: string;
   toggleTheme: string;
@@ -77,6 +79,20 @@ export interface Translations {
 
   // Page
   pageTitle: string;
+
+  // Color names
+  colorRed: string;
+  colorOrange: string;
+  colorYellow: string;
+  colorGreen: string;
+  colorTeal: string;
+  colorBlue: string;
+  colorIndigo: string;
+  colorViolet: string;
+  colorPink: string;
+  colorCherry: string;
+  colorGray: string;
+  colorSky: string;
 
   // Locale names (for language picker)
   localeName: string;

@@ -58,7 +58,9 @@ export const zh: Translations = {
   shortcutClose: "关闭面板",
 
   exportChart: "导出图表",
+  exportError: "无法导出图片",
   shareLink: "分享链接",
+  shareLinkError: "无法复制链接",
   linkCopied: "链接已复制",
   sharedView: "共享视图",
   toggleTheme: "切换主题",
@@ -69,5 +71,17 @@ export const zh: Translations = {
 
   pageTitle: "dot life - 用圆点可视化你的人生",
 
+  colorRed: "红色",
+  colorOrange: "橙色",
+  colorYellow: "黄色",
+  colorGreen: "绿色",
+  colorTeal: "青色",
+  colorBlue: "蓝色",
+  colorIndigo: "靛蓝",
+  colorViolet: "紫色",
+  colorPink: "粉色",
+  colorCherry: "樱桃色",
+  colorGray: "灰色",
+  colorSky: "天蓝",
   localeName: "中文",
 };

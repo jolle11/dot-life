@@ -58,7 +58,9 @@ export const ja: Translations = {
   shortcutClose: "パネルを閉じる",
 
   exportChart: "画像を書き出す",
+  exportError: "画像をエクスポートできませんでした",
   shareLink: "リンクを共有",
+  shareLinkError: "リンクをコピーできませんでした",
   linkCopied: "リンクをコピーしました",
   sharedView: "共有ビュー",
   toggleTheme: "テーマ切替",
@@ -69,5 +71,17 @@ export const ja: Translations = {
 
   pageTitle: "dot life - あなたの人生をドットで視覚化",
 
+  colorRed: "赤",
+  colorOrange: "オレンジ",
+  colorYellow: "黄色",
+  colorGreen: "緑",
+  colorTeal: "ティール",
+  colorBlue: "青",
+  colorIndigo: "インディゴ",
+  colorViolet: "紫",
+  colorPink: "ピンク",
+  colorCherry: "チェリー",
+  colorGray: "グレー",
+  colorSky: "水色",
   localeName: "日本語",
 };

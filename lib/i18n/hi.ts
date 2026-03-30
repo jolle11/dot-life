@@ -58,7 +58,9 @@ export const hi: Translations = {
   shortcutClose: "पैनल बंद करें",
 
   exportChart: "चार्ट निर्यात करें",
+  exportError: "छवि निर्यात नहीं हो सकी",
   shareLink: "लिंक साझा करें",
+  shareLinkError: "लिंक कॉपी नहीं हो सका",
   linkCopied: "लिंक कॉपी किया गया",
   sharedView: "साझा दृश्य",
   toggleTheme: "थीम बदलें",
@@ -69,5 +71,17 @@ export const hi: Translations = {
 
   pageTitle: "dot life - अपने जीवन को बिंदुओं में देखें",
 
+  colorRed: "लाल",
+  colorOrange: "नारंगी",
+  colorYellow: "पीला",
+  colorGreen: "हरा",
+  colorTeal: "टील",
+  colorBlue: "नीला",
+  colorIndigo: "गहरा नीला",
+  colorViolet: "बैंगनी",
+  colorPink: "गुलाबी",
+  colorCherry: "चेरी",
+  colorGray: "स्लेटी",
+  colorSky: "आसमानी",
   localeName: "हिन्दी",
 };

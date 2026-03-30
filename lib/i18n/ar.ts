@@ -58,7 +58,9 @@ export const ar: Translations = {
   shortcutClose: "إغلاق الأجزاء",
 
   exportChart: "تصدير الرسم",
+  exportError: "تعذر تصدير الصورة",
   shareLink: "مشاركة الرابط",
+  shareLinkError: "تعذر نسخ الرابط",
   linkCopied: "تم نسخ الرابط",
   sharedView: "عرض مشترك",
   toggleTheme: "تغيير المظهر",
@@ -69,5 +71,17 @@ export const ar: Translations = {
 
   pageTitle: "dot life - تصوّر حياتك بالنقاط",
 
+  colorRed: "أحمر",
+  colorOrange: "برتقالي",
+  colorYellow: "أصفر",
+  colorGreen: "أخضر",
+  colorTeal: "أزرق مخضر",
+  colorBlue: "أزرق",
+  colorIndigo: "نيلي",
+  colorViolet: "بنفسجي",
+  colorPink: "وردي",
+  colorCherry: "كرزي",
+  colorGray: "رمادي",
+  colorSky: "سماوي",
   localeName: "العربية",
 };

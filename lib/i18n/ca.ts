@@ -58,7 +58,9 @@ export const ca: Translations = {
   shortcutClose: "Tancar panells",
 
   exportChart: "Exportar gràfic",
+  exportError: "No s'ha pogut exportar la imatge",
   shareLink: "Compartir enllaç",
+  shareLinkError: "No s'ha pogut copiar l'enllaç",
   linkCopied: "Enllaç copiat",
   sharedView: "Vista compartida",
   toggleTheme: "Canviar tema",
@@ -69,5 +71,17 @@ export const ca: Translations = {
 
   pageTitle: "dot life - Visualitza la teva vida en punts",
 
+  colorRed: "Vermell",
+  colorOrange: "Taronja",
+  colorYellow: "Groc",
+  colorGreen: "Verd",
+  colorTeal: "Turquesa",
+  colorBlue: "Blau",
+  colorIndigo: "Índigo",
+  colorViolet: "Violeta",
+  colorPink: "Rosa",
+  colorCherry: "Cirera",
+  colorGray: "Gris",
+  colorSky: "Cel",
   localeName: "Català",
 };
