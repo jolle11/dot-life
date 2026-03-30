@@ -5,12 +5,11 @@ import {
   getColumnsForMode,
   getDateForUnit,
   getLivedUnits,
-  getMilestonesForUnit,
   getTotalUnits,
 } from "@/lib/calculations";
 import { useT } from "@/lib/i18n";
 import type { DotShape, Milestone, ViewMode } from "@/lib/types";
-import { memo, useMemo, useState } from "react";
+import { type MutableRefObject, memo, useCallback, useEffect, useMemo, useState } from "react";
 
 interface Props {
   birthDate: Date;
@@ -20,12 +19,89 @@ interface Props {
   dotShape?: DotShape;
   onDotClick?: (date: Date) => void;
   dateLocale?: string;
+  /** Ref that the parent can call to clear the hovered tooltip (e.g. before export) */
+  clearHoverRef?: MutableRefObject<(() => void) | null>;
 }
 
 interface DotData {
   isLived: boolean;
   milestones: Milestone[];
   date: Date;
+}
+
+/**
+ * Pre-compute a Map<dotIndex, Milestone[]> so we avoid O(dots × milestones)
+ * per render. For each milestone we figure out which dot range it covers and
+ * populate the map in O(milestones × span) which is much cheaper.
+ */
+function buildMilestoneMap(
+  birthDate: Date,
+  totalUnits: number,
+  viewMode: ViewMode,
+  milestones: Milestone[],
+): Map<number, Milestone[]> {
+  if (milestones.length === 0) return new Map();
+
+  const map = new Map<number, Milestone[]>();
+
+  for (const m of milestones) {
+    const mStart = new Date(m.date);
+    const [sy, sm, sd] = m.date.split("-").map(Number);
+    const startDate = new Date(sy, sm - 1, sd);
+
+    const endStr = m.endDate || m.date;
+    const [ey, em, ed] = endStr.split("-").map(Number);
+    const endDate = new Date(ey, em - 1, ed);
+
+    // Find the first dot index that this milestone touches
+    let startIdx: number;
+    let endIdx: number;
+
+    const msPerDay = 1000 * 60 * 60 * 24;
+
+    switch (viewMode) {
+      case "weeks": {
+        const daysFromBirthToStart = Math.floor(
+          (startDate.getTime() - birthDate.getTime()) / msPerDay,
+        );
+        const daysFromBirthToEnd = Math.floor(
+          (endDate.getTime() - birthDate.getTime()) / msPerDay,
+        );
+        startIdx = Math.max(0, Math.floor(daysFromBirthToStart / 7));
+        endIdx = Math.min(totalUnits - 1, Math.floor(daysFromBirthToEnd / 7));
+        break;
+      }
+      case "months": {
+        startIdx = Math.max(
+          0,
+          (startDate.getFullYear() - birthDate.getFullYear()) * 12 +
+            (startDate.getMonth() - birthDate.getMonth()),
+        );
+        endIdx = Math.min(
+          totalUnits - 1,
+          (endDate.getFullYear() - birthDate.getFullYear()) * 12 +
+            (endDate.getMonth() - birthDate.getMonth()),
+        );
+        break;
+      }
+      case "years": {
+        startIdx = Math.max(0, startDate.getFullYear() - birthDate.getFullYear());
+        endIdx = Math.min(totalUnits - 1, endDate.getFullYear() - birthDate.getFullYear());
+        break;
+      }
+    }
+
+    for (let i = startIdx; i <= endIdx; i++) {
+      const existing = map.get(i);
+      if (existing) {
+        existing.push(m);
+      } else {
+        map.set(i, [m]);
+      }
+    }
+  }
+
+  return map;
 }
 
 function dotBackground(milestones: Milestone[]): React.CSSProperties | undefined {
@@ -151,22 +227,36 @@ export function DotGrid({
   dotShape = "circle",
   onDotClick,
   dateLocale = "es-ES",
+  clearHoverRef,
 }: Props) {
   const t = useT();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  // Expose a way for the parent to clear the hovered tooltip
+  const clearHover = useCallback(() => setHoveredIndex(null), []);
+  useEffect(() => {
+    if (clearHoverRef) clearHoverRef.current = clearHover;
+    return () => { if (clearHoverRef) clearHoverRef.current = null; };
+  }, [clearHoverRef, clearHover]);
 
   const total = getTotalUnits(lifeExpectancy, viewMode);
   const lived = getLivedUnits(birthDate, viewMode);
   const columns = getColumnsForMode(viewMode);
 
+  // Pre-compute milestone map: O(milestones × avg span) instead of O(dots × milestones)
+  const milestoneMap = useMemo(
+    () => buildMilestoneMap(birthDate, total, viewMode, milestones),
+    [birthDate, total, viewMode, milestones],
+  );
+
   const dots = useMemo(() => {
     return Array.from({ length: total }, (_, i) => {
       const isLived = i < lived;
-      const dotMilestones = getMilestonesForUnit(birthDate, i, viewMode, milestones);
+      const dotMilestones = milestoneMap.get(i) ?? [];
       const date = getDateForUnit(birthDate, i, viewMode);
       return { isLived, milestones: dotMilestones, date };
     });
-  }, [total, lived, birthDate, viewMode, milestones]);
+  }, [total, lived, birthDate, viewMode, milestoneMap]);
 
   const rowLabels = useMemo(() => {
     const rows = Math.ceil(total / columns);
@@ -191,6 +281,14 @@ export function DotGrid({
     md: "gap-1 sm:gap-1.5",
     lg: "gap-1.5 sm:gap-2",
   };
+
+  // Stable callbacks for event delegation — avoid recreating per-dot
+  const handleMouseEnter = useCallback((i: number) => setHoveredIndex(i), []);
+  const handleMouseLeave = useCallback(() => setHoveredIndex(null), []);
+  const handleDotClick = useCallback(
+    (date: Date) => onDotClick?.(date),
+    [onDotClick],
+  );
 
   // Top 3 rows — tooltips go below instead of above
   const topRowThreshold = columns * 3;
@@ -238,9 +336,9 @@ export function DotGrid({
               sizeClass={sizeClasses[dotSize]}
               dotShape={dotShape}
               isHovered={hoveredIndex === i}
-              onMouseEnter={() => setHoveredIndex(i)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => onDotClick?.(dot.date)}
+              onMouseEnter={() => handleMouseEnter(i)}
+              onMouseLeave={handleMouseLeave}
+              onClick={() => handleDotClick(dot.date)}
               viewMode={viewMode}
               isTopRows={i < topRowThreshold}
               dateLocale={dateLocale}
