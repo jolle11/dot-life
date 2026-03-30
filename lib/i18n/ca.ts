@@ -33,6 +33,11 @@ export const ca: Translations = {
   yearLabel: "Any",
   lived: "Viscut",
   toLive: "Per viure",
+  today: "Avui",
+  dotLived: "Viscut",
+  dotFuture: "Per viure",
+  dotToday: "Avui — setmana actual",
+  gridLabel: "Quadrícula de vida",
 
   milestones: "Fites",
   addMilestone: "Afegir",

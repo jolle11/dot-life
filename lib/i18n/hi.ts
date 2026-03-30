@@ -33,6 +33,11 @@ export const hi: Translations = {
   yearLabel: "वर्ष",
   lived: "जीवित",
   toLive: "शेष",
+  today: "आज",
+  dotLived: "जीया हुआ",
+  dotFuture: "भविष्य",
+  dotToday: "आज — इस सप्ताह",
+  gridLabel: "जीवन ग्रिड",
 
   milestones: "मील के पत्थर",
   addMilestone: "जोड़ें",

@@ -33,6 +33,11 @@ export const pt: Translations = {
   yearLabel: "Ano",
   lived: "Vivido",
   toLive: "Por viver",
+  today: "Hoje",
+  dotLived: "Vivido",
+  dotFuture: "Futuro",
+  dotToday: "Hoje — semana atual",
+  gridLabel: "Grade de vida",
 
   milestones: "Marcos",
   addMilestone: "Adicionar",

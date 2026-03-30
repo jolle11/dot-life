@@ -33,6 +33,11 @@ export const ar: Translations = {
   yearLabel: "سنة",
   lived: "معاش",
   toLive: "متبقي",
+  today: "اليوم",
+  dotLived: "ما عشته",
+  dotFuture: "المستقبل",
+  dotToday: "اليوم — الأسبوع الحالي",
+  gridLabel: "شبكة الحياة",
 
   milestones: "محطات",
   addMilestone: "إضافة",

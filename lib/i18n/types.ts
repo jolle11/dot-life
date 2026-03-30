@@ -36,6 +36,11 @@ export interface Translations {
   yearLabel: string;
   lived: string;
   toLive: string;
+  today: string;
+  dotLived: string;
+  dotFuture: string;
+  dotToday: string;
+  gridLabel: string;
 
   // Milestones
   milestones: string;

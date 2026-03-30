@@ -33,6 +33,11 @@ export const zh: Translations = {
   yearLabel: "年",
   lived: "已活",
   toLive: "未来",
+  today: "今天",
+  dotLived: "已过",
+  dotFuture: "未来",
+  dotToday: "今天 — 本周",
+  gridLabel: "生命网格",
 
   milestones: "里程碑",
   addMilestone: "添加",

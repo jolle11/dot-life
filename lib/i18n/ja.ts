@@ -33,6 +33,11 @@ export const ja: Translations = {
   yearLabel: "年",
   lived: "生きた",
   toLive: "これから",
+  today: "今日",
+  dotLived: "過去",
+  dotFuture: "未来",
+  dotToday: "今日 — 今週",
+  gridLabel: "ライフグリッド",
 
   milestones: "マイルストーン",
   addMilestone: "追加",

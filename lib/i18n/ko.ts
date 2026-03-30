@@ -33,6 +33,11 @@ export const ko: Translations = {
   yearLabel: "년",
   lived: "살아옴",
   toLive: "남은 삶",
+  today: "오늘",
+  dotLived: "살아온 시간",
+  dotFuture: "앞으로의 시간",
+  dotToday: "오늘 — 이번 주",
+  gridLabel: "인생 그리드",
 
   milestones: "이정표",
   addMilestone: "추가",

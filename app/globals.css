@@ -10,3 +10,29 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+
+/* Pulse ring animation for the "today" dot */
+@keyframes dot-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0);
+  }
+}
+.dot-today-pulse {
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+:is(.dark) .dot-today-pulse {
+  animation-name: dot-pulse-dark;
+}
+
+@keyframes dot-pulse-dark {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0);
+  }
+}
