@@ -34,7 +34,7 @@ export function WelcomeScreen({ onSubmit }: Props) {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="relative z-10 flex w-full max-w-md flex-col items-center gap-10"
@@ -42,7 +42,7 @@ export function WelcomeScreen({ onSubmit }: Props) {
         {/* Logo & title */}
         <div className="flex flex-col items-center gap-4">
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={false}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
@@ -62,7 +62,7 @@ export function WelcomeScreen({ onSubmit }: Props) {
 
         {/* Birth date form */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.25 }}
           className="w-full"
@@ -95,7 +95,7 @@ export function WelcomeScreen({ onSubmit }: Props) {
 
         {/* Footer hint */}
         <motion.p
-          initial={{ opacity: 0 }}
+          initial={false}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
           className="text-xs text-zinc-400 dark:text-zinc-500"
