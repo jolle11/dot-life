@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,16 +14,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = "https://dotlifeapp.vercel.app";
-
 export const metadata: Metadata = {
   title: {
-    default: "dot life — Visualiza tu vida en puntos",
-    template: "%s | dot life",
+    default: SITE_TITLE,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Visualiza cuánto tiempo has vivido y cuánto te queda. Cada punto es una semana, un mes o un año de tu vida. Añade milestones y comparte tu grid.",
-  applicationName: "dot life",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
   authors: [{ name: "Jordi Ollé Ballesté" }],
   keywords: [
     "life in weeks",
@@ -41,8 +39,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "dot life",
-    title: "dot life — Visualiza tu vida en puntos",
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
     description:
       "Cada punto es una semana, un mes o un año de tu vida. Descubre cuánto has vivido y cuánto te queda.",
     url: SITE_URL,
@@ -50,7 +48,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "dot life — Visualiza tu vida en puntos",
+    title: SITE_TITLE,
     description:
       "Cada punto es una semana, un mes o un año de tu vida. Descubre cuánto has vivido y cuánto te queda.",
   },
@@ -81,12 +79,14 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "dot life",
+    name: SITE_NAME,
     url: SITE_URL,
     description:
       "Visualiza cuánto tiempo has vivido y cuánto te queda en un grid de puntos interactivo.",
     applicationCategory: "LifestyleApplication",
     operatingSystem: "Any",
+    inLanguage: "es",
+    image: `${SITE_URL}/opengraph-image`,
     offers: {
       "@type": "Offer",
       price: "0",
@@ -103,10 +103,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         {children}
         <Script
           defer
@@ -114,7 +111,14 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         <noscript>
-          <div style={{ padding: "2rem", maxWidth: "600px", margin: "0 auto", fontFamily: "system-ui, sans-serif" }}>
+          <div
+            style={{
+              padding: "2rem",
+              maxWidth: "600px",
+              margin: "0 auto",
+              fontFamily: "system-ui, sans-serif",
+            }}
+          >
             <h1>dot life</h1>
             <p>
               Visualiza tu vida en puntos. Cada punto es una semana, un mes o un

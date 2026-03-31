@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/lib/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "dot life — Visualiza tu vida en puntos",
+    name: SITE_TITLE,
     short_name: "dot life",
-    description:
-      "Visualiza cuánto tiempo has vivido y cuánto te queda en un grid de puntos interactivo.",
+    description: SITE_DESCRIPTION,
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

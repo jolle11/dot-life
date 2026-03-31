@@ -1,5 +1,5 @@
-import type { Milestone, ViewMode } from "./types";
 import { getUnitsBetween, parseLocalDate } from "./calculations";
+import type { Milestone, ViewMode } from "./types";
 
 /**
  * Encodes the grid state into URL search params without personal data.
@@ -11,7 +11,12 @@ interface ShareData {
   viewMode: ViewMode;
   lifeExpectancy: number;
   age: number;
-  milestones: { label: string; color: string; startUnit: number; endUnit?: number }[];
+  milestones: {
+    label: string;
+    color: string;
+    startUnit: number;
+    endUnit?: number;
+  }[];
 }
 
 export function encodeShareURL(
@@ -24,7 +29,10 @@ export function encodeShareURL(
   // Precise age: subtract 1 if the birthday hasn't occurred yet this year
   let age = now.getFullYear() - birthDate.getFullYear();
   const monthDiff = now.getMonth() - birthDate.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birthDate.getDate())) {
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && now.getDate() < birthDate.getDate())
+  ) {
     age--;
   }
 
@@ -51,8 +59,11 @@ export function encodeShareURL(
   return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
 }
 
-export function decodeShareURL(search: string): ShareData | null {
-  const params = new URLSearchParams(search);
+export function decodeShareURL(
+  search: string | URLSearchParams,
+): ShareData | null {
+  const params =
+    typeof search === "string" ? new URLSearchParams(search) : search;
   const v = params.get("v");
   const e = params.get("e");
   const a = params.get("a");

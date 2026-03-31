@@ -2,7 +2,7 @@ import type { LifeConfig } from "./types";
 
 const STORAGE_KEY = "dot-life-config";
 
-const defaultConfig: LifeConfig = {
+export const defaultConfig: LifeConfig = {
   birthDate: "",
   lifeExpectancy: 80,
   viewMode: "weeks",
