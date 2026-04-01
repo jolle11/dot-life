@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { toPng } from "html-to-image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DotGrid } from "@/components/DotGrid";
+import { Footer } from "@/components/Footer";
 import { HelpDialog } from "@/components/HelpDialog";
 import { LocalePicker } from "@/components/LocalePicker";
 import { MilestoneEditor } from "@/components/MilestoneEditor";
@@ -273,6 +274,7 @@ export function HomeClient({
               <SeoContent locale={locale} />
             </main>
           )}
+          <Footer />
         </div>
       </I18nProvider>
     );
@@ -441,6 +443,9 @@ export function HomeClient({
             dateLocale={dateLocale}
           />
         )}
+
+        {/* Footer */}
+        <Footer />
 
         {/* Error toast */}
         <AnimatePresence>
