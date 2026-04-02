@@ -1,24 +1,26 @@
 "use client";
 
 import {
-  formatDate,
-  getColumnsForMode,
-  getDateForUnit,
-  getLivedUnits,
-  getTotalUnits,
-} from "@/lib/calculations";
-import { useT } from "@/lib/i18n";
-import type { DotShape, Milestone, ViewMode } from "@/lib/types";
-import {
   type MutableRefObject,
-  type KeyboardEvent as ReactKeyboardEvent,
   memo,
+  type KeyboardEvent as ReactKeyboardEvent,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import {
+  addUnits,
+  formatDate,
+  getUnitsBetween,
+  getColumnsForMode,
+  getDateForUnit,
+  getTotalUnits,
+  parseLocalDate,
+} from "@/lib/calculations";
+import { useT } from "@/lib/i18n";
+import type { DotShape, Milestone, ViewMode } from "@/lib/types";
 
 interface Props {
   birthDate: Date;
@@ -33,21 +35,24 @@ interface Props {
 }
 
 interface DotData {
+  isGhost: boolean;
   isLived: boolean;
   isCurrent: boolean;
   milestones: Milestone[];
   date: Date;
+  startDate: Date;
+  endDate: Date;
+  positionInRow: number;
+  rowLabel: string;
 }
 
 /**
- * Pre-compute a Map<dotIndex, Milestone[]> so we avoid O(dots × milestones)
- * per render. For each milestone we figure out which dot range it covers and
- * populate the map in O(milestones × span) which is much cheaper.
+ * Pre-compute a Map<dotIndex, Milestone[]> by intersecting milestone ranges
+ * with the rendered dot intervals. The grid is small enough that this stays
+ * cheap while keeping the calendar-aligned logic straightforward.
  */
 function buildMilestoneMap(
-  birthDate: Date,
-  totalUnits: number,
-  viewMode: ViewMode,
+  dots: Pick<DotData, "isGhost" | "startDate" | "endDate">[],
   milestones: Milestone[],
 ): Map<number, Milestone[]> {
   if (milestones.length === 0) return new Map();
@@ -55,64 +60,30 @@ function buildMilestoneMap(
   const map = new Map<number, Milestone[]>();
 
   for (const m of milestones) {
-    const [sy, sm, sd] = m.date.split("-").map(Number);
-    const startDate = new Date(sy, sm - 1, sd);
+    const startDate = parseLocalDate(m.date);
+    const endInclusive = parseLocalDate(m.endDate || m.date);
+    const endExclusive = new Date(endInclusive);
+    endExclusive.setDate(endExclusive.getDate() + 1);
 
-    const endStr = m.endDate || m.date;
-    const [ey, em, ed] = endStr.split("-").map(Number);
-    const endDate = new Date(ey, em - 1, ed);
-
-    let startIdx: number;
-    let endIdx: number;
-
-    const msPerDay = 1000 * 60 * 60 * 24;
-
-    switch (viewMode) {
-      case "weeks": {
-        const daysFromBirthToStart = Math.floor(
-          (startDate.getTime() - birthDate.getTime()) / msPerDay,
-        );
-        const daysFromBirthToEnd = Math.floor(
-          (endDate.getTime() - birthDate.getTime()) / msPerDay,
-        );
-        startIdx = Math.max(0, Math.floor(daysFromBirthToStart / 7));
-        endIdx = Math.min(totalUnits - 1, Math.floor(daysFromBirthToEnd / 7));
-        break;
+    dots.forEach((dot, index) => {
+      if (dot.isGhost) return;
+      if (endExclusive > dot.startDate && startDate < dot.endDate) {
+        const existing = map.get(index);
+        if (existing) {
+          existing.push(m);
+        } else {
+          map.set(index, [m]);
+        }
       }
-      case "months": {
-        startIdx = Math.max(
-          0,
-          (startDate.getFullYear() - birthDate.getFullYear()) * 12 +
-            (startDate.getMonth() - birthDate.getMonth()),
-        );
-        endIdx = Math.min(
-          totalUnits - 1,
-          (endDate.getFullYear() - birthDate.getFullYear()) * 12 +
-            (endDate.getMonth() - birthDate.getMonth()),
-        );
-        break;
-      }
-      case "years": {
-        startIdx = Math.max(0, startDate.getFullYear() - birthDate.getFullYear());
-        endIdx = Math.min(totalUnits - 1, endDate.getFullYear() - birthDate.getFullYear());
-        break;
-      }
-    }
-
-    for (let i = startIdx; i <= endIdx; i++) {
-      const existing = map.get(i);
-      if (existing) {
-        existing.push(m);
-      } else {
-        map.set(i, [m]);
-      }
-    }
+    });
   }
 
   return map;
 }
 
-function dotBackground(milestones: Milestone[]): React.CSSProperties | undefined {
+function dotBackground(
+  milestones: Milestone[],
+): React.CSSProperties | undefined {
   if (milestones.length === 0) return undefined;
   if (milestones.length === 1) return { backgroundColor: milestones[0].color };
   const stops = milestones
@@ -125,21 +96,24 @@ function dotBackground(milestones: Milestone[]): React.CSSProperties | undefined
   return { background: `conic-gradient(${stops})` };
 }
 
-function dotShapeStyle(shape: DotShape, sizeClass: string): { className: string } {
+function dotShapeStyle(
+  shape: DotShape,
+  sizeClass: string,
+): { className: string } {
   if (shape === "square") return { className: `${sizeClass} rounded-none` };
-  if (shape === "diamond") return { className: `${sizeClass} rounded-none rotate-45` };
+  if (shape === "diamond")
+    return { className: `${sizeClass} rounded-none rotate-45` };
   return { className: `${sizeClass} rounded-full` };
 }
 
 /** Build an accessible label for a single dot */
 function buildDotAriaLabel(
   dot: DotData,
-  index: number,
-  viewMode: ViewMode,
   dateLocale: string,
   labels: { dotLived: string; dotFuture: string; dotToday: string },
 ): string {
   const dateStr = formatDate(dot.date, dateLocale);
+  if (dot.isGhost) return dateStr;
   let status: string;
   if (dot.isCurrent) {
     status = labels.dotToday;
@@ -155,7 +129,6 @@ function buildDotAriaLabel(
 
 const Dot = memo(function Dot({
   dot,
-  index,
   sizeClass,
   dotShape,
   isHovered,
@@ -169,11 +142,9 @@ const Dot = memo(function Dot({
   dateLocale,
   weekLabel,
   monthLabel,
-  yearLabel,
   ariaLabel,
 }: {
   dot: DotData;
-  index: number;
   sizeClass: string;
   dotShape: DotShape;
   isHovered: boolean;
@@ -187,37 +158,38 @@ const Dot = memo(function Dot({
   dateLocale: string;
   weekLabel: string;
   monthLabel: string;
-  yearLabel: string;
   ariaLabel: string;
 }) {
   const hasMilestones = dot.milestones.length > 0;
   const bgStyle = dotBackground(dot.milestones);
   const shapeInfo = dotShapeStyle(dotShape, sizeClass);
-  const showTooltip = isHovered || isFocused;
+  const showTooltip = !dot.isGhost && (isHovered || isFocused);
+  const dotClassName = dot.isGhost
+    ? "bg-zinc-100 opacity-70 dark:bg-zinc-800/70"
+    : dot.isCurrent
+      ? hasMilestones
+        ? "ring-2 ring-blue-500 ring-offset-1 ring-offset-white dark:ring-blue-400 dark:ring-offset-zinc-900 dot-today-pulse"
+        : "bg-blue-500 dark:bg-blue-400 dot-today-pulse"
+      : dot.isLived
+        ? hasMilestones
+          ? ""
+          : "bg-zinc-800 dark:bg-zinc-200"
+        : "bg-zinc-200 dark:bg-zinc-700";
 
   return (
     <div
       className="relative"
       role="gridcell"
       aria-label={ariaLabel}
+      aria-disabled={dot.isGhost || undefined}
       tabIndex={-1}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
+      onMouseEnter={dot.isGhost ? undefined : onMouseEnter}
+      onMouseLeave={dot.isGhost ? undefined : onMouseLeave}
+      onClick={dot.isGhost ? undefined : onClick}
       onKeyDown={onKeyDown}
     >
       <div
-        className={`${shapeInfo.className} cursor-pointer transition-transform hover:scale-150 ${
-          dot.isCurrent
-            ? hasMilestones
-              ? "ring-2 ring-blue-500 ring-offset-1 ring-offset-white dark:ring-blue-400 dark:ring-offset-zinc-900 dot-today-pulse"
-              : "bg-blue-500 dark:bg-blue-400 dot-today-pulse"
-            : dot.isLived
-              ? hasMilestones
-                ? ""
-                : "bg-zinc-800 dark:bg-zinc-200"
-              : "bg-zinc-200 dark:bg-zinc-700"
-        }`}
+        className={`${shapeInfo.className} ${dot.isGhost ? "" : "cursor-pointer transition-transform hover:scale-150"} ${dotClassName}`}
         style={bgStyle}
       />
 
@@ -225,14 +197,15 @@ const Dot = memo(function Dot({
         <div
           role="tooltip"
           className={`absolute ${
-            isTopRows
-              ? "top-full mt-2"
-              : "bottom-full mb-2"
+            isTopRows ? "top-full mt-2" : "bottom-full mb-2"
           } left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-md bg-zinc-900 px-2.5 py-1.5 text-xs text-white shadow-lg dark:bg-zinc-100 dark:text-zinc-900`}
         >
           <p className="font-medium">{formatDate(dot.date, dateLocale)}</p>
           {dot.milestones.map((m) => (
-            <div key={m.id} className="mt-0.5 flex items-center gap-1.5 text-zinc-300 dark:text-zinc-600">
+            <div
+              key={m.id}
+              className="mt-0.5 flex items-center gap-1.5 text-zinc-300 dark:text-zinc-600"
+            >
               <span
                 className="inline-block h-1.5 w-1.5 shrink-0 rounded-full"
                 style={{ backgroundColor: m.color }}
@@ -247,9 +220,10 @@ const Dot = memo(function Dot({
           ))}
           {viewMode !== "years" && (
             <p className="text-zinc-400 dark:text-zinc-500">
-              {viewMode === "weeks" ? weekLabel : monthLabel} {index + 1}
+              {viewMode === "weeks" ? weekLabel : monthLabel}{" "}
+              {dot.positionInRow + 1}
               {" | "}
-              {yearLabel} {Math.floor(index / (viewMode === "weeks" ? 52 : 12))}
+              {dot.rowLabel}
             </p>
           )}
           <div
@@ -287,40 +261,110 @@ export function DotGrid({
   }, []);
   useEffect(() => {
     if (clearHoverRef) clearHoverRef.current = clearHover;
-    return () => { if (clearHoverRef) clearHoverRef.current = null; };
+    return () => {
+      if (clearHoverRef) clearHoverRef.current = null;
+    };
   }, [clearHoverRef, clearHover]);
 
-  const total = getTotalUnits(lifeExpectancy, viewMode);
-  const lived = getLivedUnits(birthDate, viewMode);
+  const totalLifeUnits = getTotalUnits(lifeExpectancy, viewMode);
   const columns = getColumnsForMode(viewMode);
+  const now = new Date();
+  const lifeEndDate = useMemo(
+    () => getDateForUnit(birthDate, totalLifeUnits, viewMode),
+    [birthDate, totalLifeUnits, viewMode],
+  );
 
-  // The "current" dot index — the one that contains today
-  const currentDotIndex = useMemo(() => Math.max(0, lived - 1), [lived]);
+  const { gridStartDate, displayTotal, rowLabels } = useMemo(() => {
+    if (viewMode === "years") {
+      const rows = Math.ceil(totalLifeUnits / columns);
+      return {
+        gridStartDate: birthDate,
+        displayTotal: totalLifeUnits,
+        rowLabels: Array.from({ length: rows }, (_, i) => `${i * 10}`),
+      };
+    }
 
-  // Pre-compute milestone map
+    const startYear = birthDate.getFullYear();
+    const endYear = startYear + lifeExpectancy;
+    const rows = endYear - startYear + 1;
+
+    return {
+      gridStartDate: new Date(startYear, 0, 1),
+      displayTotal: rows * columns,
+      rowLabels: Array.from({ length: rows }, (_, i) => `${startYear + i}`),
+    };
+  }, [birthDate, columns, lifeExpectancy, totalLifeUnits, viewMode]);
+
+  const boundaryPosition = useMemo(() => {
+    if (viewMode === "years") return 0;
+    const yearStart = new Date(birthDate.getFullYear(), 0, 1);
+    return Math.min(
+      columns - 1,
+      Math.max(0, getUnitsBetween(yearStart, birthDate, viewMode)),
+    );
+  }, [birthDate, columns, viewMode]);
+
+  const baseDots = useMemo(() => {
+    const lastRowIndex = rowLabels.length - 1;
+
+    return Array.from({ length: displayTotal }, (_, i) => {
+      const startDate = addUnits(gridStartDate, i, viewMode);
+      const endDate = addUnits(gridStartDate, i + 1, viewMode);
+      const rowIndex = Math.floor(i / columns);
+      const positionInRow = i % columns;
+      const isGhost =
+        viewMode === "years"
+          ? false
+          : rowIndex === 0
+            ? positionInRow < boundaryPosition
+            : rowIndex === lastRowIndex
+              ? positionInRow > boundaryPosition
+              : false;
+      const isCurrent = !isGhost && now >= startDate && now < endDate;
+      const isLived = !isGhost && !isCurrent && endDate <= now;
+      const clampedDate = isGhost
+        ? startDate
+        : new Date(Math.max(startDate.getTime(), birthDate.getTime()));
+
+      return {
+        isGhost,
+        isLived,
+        isCurrent,
+        milestones: [],
+        date: clampedDate,
+        startDate,
+        endDate,
+        positionInRow,
+        rowLabel:
+          viewMode === "years"
+            ? rowLabels[rowIndex]
+            : `${t.yearLabel} ${rowLabels[rowIndex]}`,
+      };
+    });
+  }, [
+    birthDate,
+    columns,
+    displayTotal,
+    gridStartDate,
+    lifeEndDate,
+    now,
+    rowLabels,
+    boundaryPosition,
+    t.yearLabel,
+    viewMode,
+  ]);
+
   const milestoneMap = useMemo(
-    () => buildMilestoneMap(birthDate, total, viewMode, milestones),
-    [birthDate, total, viewMode, milestones],
+    () => buildMilestoneMap(baseDots, milestones),
+    [baseDots, milestones],
   );
 
   const dots = useMemo(() => {
-    return Array.from({ length: total }, (_, i) => {
-      const isLived = i < lived;
-      const isCurrent = i === currentDotIndex;
-      const dotMilestones = milestoneMap.get(i) ?? [];
-      const date = getDateForUnit(birthDate, i, viewMode);
-      return { isLived, isCurrent, milestones: dotMilestones, date };
-    });
-  }, [total, lived, currentDotIndex, birthDate, viewMode, milestoneMap]);
-
-  const rowLabels = useMemo(() => {
-    const rows = Math.ceil(total / columns);
-    return Array.from({ length: rows }, (_, i) => {
-      if (viewMode === "years") return `${i * 10}`;
-      if (viewMode === "months") return `${i}`;
-      return `${i}`;
-    });
-  }, [total, columns, viewMode]);
+    return baseDots.map((dot, i) => ({
+      ...dot,
+      milestones: milestoneMap.get(i) ?? [],
+    }));
+  }, [baseDots, milestoneMap]);
 
   const dotSize =
     viewMode === "weeks" ? "sm" : viewMode === "months" ? "md" : "lg";
@@ -348,16 +392,17 @@ export function DotGrid({
   // Keyboard navigation inside the grid
   const moveFocus = useCallback(
     (nextIdx: number) => {
-      if (nextIdx < 0 || nextIdx >= total) return;
+      if (nextIdx < 0 || nextIdx >= displayTotal) return;
       setFocusedIndex(nextIdx);
       // Move DOM focus to the cell
       const container = gridContainerRef.current;
       if (container) {
-        const cells = container.querySelectorAll<HTMLElement>("[role='gridcell']");
+        const cells =
+          container.querySelectorAll<HTMLElement>("[role='gridcell']");
         cells[nextIdx]?.focus({ preventScroll: false });
       }
     },
-    [total],
+    [displayTotal],
   );
 
   const handleGridKeyDown = useCallback(
@@ -380,25 +425,30 @@ export function DotGrid({
           moveFocus(0);
           break;
         case "End":
-          moveFocus(total - 1);
+          moveFocus(displayTotal - 1);
           break;
         case "Enter":
         case " ":
-          if (dots[index]) handleDotClick(dots[index].date);
+          if (dots[index] && !dots[index].isGhost)
+            handleDotClick(dots[index].date);
           break;
         default:
           handled = false;
       }
       if (handled) e.preventDefault();
     },
-    [moveFocus, columns, total, dots, handleDotClick],
+    [moveFocus, columns, displayTotal, dots, handleDotClick],
   );
 
   // Aria labels cache
   const ariaLabels = useMemo(() => {
-    const labels = { dotLived: t.dotLived, dotFuture: t.dotFuture, dotToday: t.dotToday };
-    return dots.map((dot, i) => buildDotAriaLabel(dot, i, viewMode, dateLocale, labels));
-  }, [dots, viewMode, dateLocale, t.dotLived, t.dotFuture, t.dotToday]);
+    const labels = {
+      dotLived: t.dotLived,
+      dotFuture: t.dotFuture,
+      dotToday: t.dotToday,
+    };
+    return dots.map((dot) => buildDotAriaLabel(dot, dateLocale, labels));
+  }, [dots, dateLocale, t.dotLived, t.dotFuture, t.dotToday]);
 
   // Top 3 rows — tooltips go below instead of above
   const topRowThreshold = columns * 3;
@@ -415,83 +465,81 @@ export function DotGrid({
         </div>
 
         <div className="flex">
-        {/* Age labels column */}
-        <div
-          className={`flex flex-col ${gapClasses[dotSize]} mr-1 sm:mr-2 shrink-0`}
-          aria-hidden="true"
-        >
-          {rowLabels.map((label, i) => (
-            <div
-              key={i}
-              className={`flex items-center justify-end ${sizeClasses[dotSize]}`}
-            >
-              {(viewMode === "years" || i % 5 === 0) && (
-                <span className="text-[9px] leading-none text-zinc-400 sm:text-[10px] dark:text-zinc-500">
-                  {label}
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Dots grid */}
-        <div
-          ref={gridContainerRef}
-          role="grid"
-          aria-label={t.gridLabel}
-          className={`grid ${gapClasses[dotSize]}`}
-          style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
-        >
-          {dots.map((dot, i) => (
-            <Dot
-              key={i}
-              dot={dot}
-              index={i}
-              sizeClass={sizeClasses[dotSize]}
-              dotShape={dotShape}
-              isHovered={hoveredIndex === i}
-              isFocused={focusedIndex === i}
-              onMouseEnter={() => handleMouseEnter(i)}
-              onMouseLeave={handleMouseLeave}
-              onClick={() => handleDotClick(dot.date)}
-              onKeyDown={(e) => handleGridKeyDown(e, i)}
-              viewMode={viewMode}
-              isTopRows={i < topRowThreshold}
-              dateLocale={dateLocale}
-              weekLabel={t.weekLabel}
-              monthLabel={t.monthLabel}
-              yearLabel={t.yearLabel}
-              ariaLabel={ariaLabels[i]}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Legend */}
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
-        <div className="flex items-center gap-1.5">
-          <div className="h-2.5 w-2.5 rounded-full bg-zinc-800 dark:bg-zinc-200" />
-          <span>{t.lived}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-2.5 w-2.5 rounded-full bg-blue-500 dark:bg-blue-400 dot-today-pulse" />
-          <span>{t.today}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-2.5 w-2.5 rounded-full bg-zinc-200 dark:bg-zinc-700" />
-          <span>{t.toLive}</span>
-        </div>
-        {milestones.length > 0 &&
-          milestones.map((m) => (
-            <div key={m.id} className="flex items-center gap-1.5">
+          {/* Row labels column */}
+          <div
+            className={`flex flex-col ${gapClasses[dotSize]} mr-1 sm:mr-2 shrink-0`}
+            aria-hidden="true"
+          >
+            {rowLabels.map((label, i) => (
               <div
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: m.color }}
+                key={label}
+                className={`flex items-center justify-end ${sizeClasses[dotSize]}`}
+              >
+                {(viewMode === "years" || i % 5 === 0) && (
+                  <span className="text-[9px] leading-none text-zinc-400 sm:text-[10px] dark:text-zinc-500">
+                    {label}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Dots grid */}
+          <div
+            ref={gridContainerRef}
+            role="grid"
+            aria-label={t.gridLabel}
+            className={`grid ${gapClasses[dotSize]}`}
+            style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+          >
+            {dots.map((dot, i) => (
+              <Dot
+                key={dot.startDate.toISOString()}
+                dot={dot}
+                sizeClass={sizeClasses[dotSize]}
+                dotShape={dotShape}
+                isHovered={hoveredIndex === i}
+                isFocused={focusedIndex === i}
+                onMouseEnter={() => handleMouseEnter(i)}
+                onMouseLeave={handleMouseLeave}
+                onClick={() => handleDotClick(dot.date)}
+                onKeyDown={(e) => handleGridKeyDown(e, i)}
+                viewMode={viewMode}
+                isTopRows={i < topRowThreshold}
+                dateLocale={dateLocale}
+                weekLabel={t.weekLabel}
+                monthLabel={t.monthLabel}
+                ariaLabel={ariaLabels[i]}
               />
-              <span>{m.label}</span>
-            </div>
-          ))}
-      </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Legend */}
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="flex items-center gap-1.5">
+            <div className="h-2.5 w-2.5 rounded-full bg-zinc-800 dark:bg-zinc-200" />
+            <span>{t.lived}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="h-2.5 w-2.5 rounded-full bg-blue-500 dark:bg-blue-400 dot-today-pulse" />
+            <span>{t.today}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="h-2.5 w-2.5 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+            <span>{t.toLive}</span>
+          </div>
+          {milestones.length > 0 &&
+            milestones.map((m) => (
+              <div key={m.id} className="flex items-center gap-1.5">
+                <div
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: m.color }}
+                />
+                <span>{m.label}</span>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
