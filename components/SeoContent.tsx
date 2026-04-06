@@ -21,70 +21,70 @@ interface SeoCopy {
 
 const seoCopy: Record<Locale, SeoCopy> = {
   es: {
-    label: "Life Calendar",
+    label: "Calendario de vida",
     introTitle:
-      "Un life calendar interactivo para visualizar tu vida en semanas, meses o años",
+      "Un calendario de vida interactivo para visualizar tu vida en semanas, meses o años",
     introBody:
-      "dot life te ayuda a ver el tiempo de forma concreta. En lugar de pensar tu vida como un numero abstracto, cada punto representa una unidad real de tiempo y te permite entender mejor tus etapas, tus decisiones y los hitos que han marcado tu historia.",
-    benefitsTitle: "Para que sirve",
+      "dot life te ayuda a ver el tiempo de forma concreta. En lugar de pensar en tu vida como un número abstracto, cada punto representa una unidad real de tiempo y te permite entender mejor tus etapas, tus decisiones y los hitos que han marcado tu historia.",
+    benefitsTitle: "Para qué sirve",
     benefits: [
-      "Convierte tu esperanza de vida en una cuadricula visual de semanas, meses o anos.",
-      "Entiende de un vistazo cuanto tiempo has vivido y cuanto queda por delante.",
-      "Anade hitos personales para ver tu vida como una linea temporal real.",
+      "Convierte tu esperanza de vida en una cuadrícula visual de semanas, meses o años.",
+      "Entiende de un vistazo cuánto tiempo has vivido y cuánto queda por delante.",
+      "Añade hitos personales para ver tu vida como una línea temporal real.",
     ],
     faqTitle: "Preguntas frecuentes",
     faqItems: [
       {
-        question: "Que es dot life?",
+        question: "¿Qué es dot life?",
         answer:
-          "dot life es una aplicacion visual tipo life calendar que transforma tu vida en puntos para ayudarte a entender el paso del tiempo de forma tangible.",
+          "dot life es una aplicación visual tipo calendario de vida que transforma tu vida en puntos para ayudarte a entender el paso del tiempo de forma tangible.",
       },
       {
-        question: "Como funciona la cuadricula de vida?",
+        question: "¿Cómo funciona la cuadrícula de vida?",
         answer:
-          "Introduces tu fecha de nacimiento y una esperanza de vida estimada. La app dibuja una cuadricula en la que cada punto representa una semana, un mes o un ano.",
+          "Introduces tu fecha de nacimiento y una esperanza de vida estimada. La aplicación dibuja una cuadrícula en la que cada punto representa una semana, un mes o un año.",
       },
       {
-        question: "Se guardan mis datos?",
+        question: "¿Se guardan mis datos?",
         answer:
-          "La configuracion se guarda localmente en tu navegador. No hace falta crear cuenta para usar la aplicacion.",
+          "La configuración se guarda localmente en tu navegador. No hace falta crear una cuenta para usar la aplicación.",
       },
     ],
     websiteDescription:
-      "Visualiza cuanto tiempo has vivido y cuanto te queda. Cada punto es una semana, un mes o un ano de tu vida. Anade hitos y comparte tu grid.",
+      "Visualiza cuánto tiempo has vivido y cuánto te queda. Cada punto es una semana, un mes o un año de tu vida. Añade hitos y comparte tu cuadrícula.",
   },
   ca: {
-    label: "Life Calendar",
+    label: "Calendari de vida",
     introTitle:
-      "Un life calendar interactiu per visualitzar la teva vida en setmanes, mesos o anys",
+      "Un calendari de vida interactiu per visualitzar la teva vida en setmanes, mesos o anys",
     introBody:
-      "dot life t'ajuda a veure el temps d'una manera concreta. En lloc de pensar la teva vida com un numero abstracte, cada punt representa una unitat real de temps i et permet entendre millor les teves etapes, les teves decisions i les fites que han marcat la teva historia.",
-    benefitsTitle: "Per a que serveix",
+      "dot life t'ajuda a veure el temps d'una manera concreta. En lloc de pensar la teva vida com un número abstracte, cada punt representa una unitat real de temps i et permet entendre millor les teves etapes, les teves decisions i les fites que han marcat la teva història.",
+    benefitsTitle: "Per a què serveix",
     benefits: [
-      "Converteix la teva esperanca de vida en una quadrícula visual de setmanes, mesos o anys.",
-      "Enten d'un cop d'ull quant temps has viscut i quant queda per endavant.",
-      "Afegeix fites personals per veure la teva vida com una linia temporal real.",
+      "Converteix la teva esperança de vida en una graella visual de setmanes, mesos o anys.",
+      "Entén d'un cop d'ull quant temps has viscut i quant queda per endavant.",
+      "Afegeix fites personals per veure la teva vida com una línia temporal real.",
     ],
-    faqTitle: "Preguntes frequents",
+    faqTitle: "Preguntes freqüents",
     faqItems: [
       {
-        question: "Que es dot life?",
+        question: "Què és dot life?",
         answer:
-          "dot life es una aplicacio visual tipus life calendar que transforma la teva vida en punts per ajudar-te a entendre el pas del temps de manera tangible.",
+          "dot life és una aplicació visual tipus calendari de vida que transforma la teva vida en punts per ajudar-te a entendre el pas del temps de manera tangible.",
       },
       {
         question: "Com funciona la quadrícula de vida?",
         answer:
-          "Introdueixes la teva data de naixement i una esperanca de vida estimada. L'aplicacio dibuixa una quadrícula on cada punt representa una setmana, un mes o un any.",
+          "Introdueixes la teva data de naixement i una esperança de vida estimada. L'aplicació dibuixa una quadrícula on cada punt representa una setmana, un mes o un any.",
       },
       {
         question: "Es guarden les meves dades?",
         answer:
-          "La configuracio es guarda localment al teu navegador. No cal crear cap compte per fer servir l'aplicacio.",
+          "La configuració es guarda localment al teu navegador. No cal crear cap compte per fer servir l'aplicació.",
       },
     ],
     websiteDescription:
-      "Visualitza quant temps has viscut i quant et queda. Cada punt es una setmana, un mes o un any de la teva vida. Afegeix fites i comparteix la teva graella.",
+      "Visualitza quant temps has viscut i quant et queda. Cada punt és una setmana, un mes o un any de la teva vida. Afegeix fites i comparteix la teva graella.",
   },
   en: {
     label: "Life Calendar",
@@ -120,61 +120,61 @@ const seoCopy: Record<Locale, SeoCopy> = {
       "Visualize how much of your life you have lived and how much is left. Each dot is a week, a month, or a year of your life. Add milestones and share your grid.",
   },
   fr: {
-    label: "Life Calendar",
+    label: "Calendrier de vie",
     introTitle:
-      "Un life calendar interactif pour visualiser votre vie en semaines, mois ou annees",
+      "Un calendrier de vie interactif pour visualiser votre vie en semaines, mois ou années",
     introBody:
-      "dot life vous aide a voir le temps de facon concrete. Au lieu de penser votre vie comme un nombre abstrait, chaque point represente une unite reelle de temps et vous aide a mieux comprendre vos etapes, vos decisions et vos moments marquants.",
-    benefitsTitle: "A quoi cela sert",
+      "dot life vous aide à voir le temps de façon concrète. Au lieu de penser votre vie comme un nombre abstrait, chaque point représente une unité réelle de temps et vous aide à mieux comprendre vos étapes, vos décisions et vos moments marquants.",
+    benefitsTitle: "À quoi cela sert",
     benefits: [
-      "Transformez votre esperance de vie en une grille visuelle de semaines, de mois ou d'annees.",
-      "Comprenez en un coup d'oeil combien de temps vous avez deja vecu et ce qu'il vous reste.",
+      "Transformez votre espérance de vie en une grille visuelle de semaines, de mois ou d'années.",
+      "Comprenez en un coup d'œil combien de temps vous avez déjà vécu et ce qu'il vous reste.",
       "Ajoutez des moments marquants pour voir votre vie comme une vraie ligne du temps.",
     ],
-    faqTitle: "Questions frequentes",
+    faqTitle: "Questions fréquentes",
     faqItems: [
       {
         question: "Qu'est-ce que dot life ?",
         answer:
-          "dot life est une application visuelle de type life calendar qui transforme votre vie en points pour vous aider a percevoir le temps de maniere concrete.",
+          "dot life est une application visuelle de type calendrier de vie qui transforme votre vie en points pour vous aider à percevoir le temps de manière concrète.",
       },
       {
         question: "Comment fonctionne la grille de vie ?",
         answer:
-          "Vous indiquez votre date de naissance et une esperance de vie estimee. L'application dessine une grille dans laquelle chaque point represente une semaine, un mois ou une annee.",
+          "Vous indiquez votre date de naissance et une espérance de vie estimée. L'application dessine une grille dans laquelle chaque point représente une semaine, un mois ou une année.",
       },
       {
         question: "Mes donnees sont-elles enregistrees ?",
         answer:
-          "La configuration est enregistree localement dans votre navigateur. Aucun compte n'est necessaire pour utiliser l'application.",
+          "La configuration est enregistrée localement dans votre navigateur. Aucun compte n'est nécessaire pour utiliser l'application.",
       },
     ],
     websiteDescription:
-      "Visualisez le temps deja vecu et celui qu'il vous reste. Chaque point represente une semaine, un mois ou une annee de votre vie. Ajoutez des moments marquants et partagez votre grille.",
+      "Visualisez le temps déjà vécu et celui qu'il vous reste. Chaque point représente une semaine, un mois ou une année de votre vie. Ajoutez des moments marquants et partagez votre grille.",
   },
   de: {
-    label: "Life Calendar",
+    label: "Lebenskalender",
     introTitle:
-      "Ein interaktiver life calendar, um dein Leben in Wochen, Monaten oder Jahren zu visualisieren",
+      "Ein interaktiver Lebenskalender, um dein Leben in Wochen, Monaten oder Jahren zu visualisieren",
     introBody:
-      "dot life hilft dir, Zeit greifbar zu sehen. Anstatt dein Leben als abstrakte Zahl zu betrachten, steht jeder Punkt fur eine reale Zeiteinheit und hilft dir, Lebensphasen, Entscheidungen und Meilensteine besser zu verstehen.",
-    benefitsTitle: "Wofur es gedacht ist",
+      "dot life hilft dir, Zeit greifbar zu sehen. Anstatt dein Leben als abstrakte Zahl zu betrachten, steht jeder Punkt für eine reale Zeiteinheit und hilft dir, Lebensphasen, Entscheidungen und Meilensteine besser zu verstehen.",
+    benefitsTitle: "Wofür es gedacht ist",
     benefits: [
       "Verwandle deine Lebenserwartung in ein visuelles Raster aus Wochen, Monaten oder Jahren.",
       "Erkenne auf einen Blick, wie viel Lebenszeit bereits vergangen ist und was noch vor dir liegt.",
-      "Fuge personliche Meilensteine hinzu, um dein Leben als echte Zeitleiste zu sehen.",
+      "Füge persönliche Meilensteine hinzu, um dein Leben als echte Zeitleiste zu sehen.",
     ],
-    faqTitle: "Haufige Fragen",
+    faqTitle: "Häufige Fragen",
     faqItems: [
       {
         question: "Was ist dot life?",
         answer:
-          "dot life ist eine visuelle Life-Calendar-App, die dein Leben in Punkte verwandelt, damit du den Lauf der Zeit greifbarer verstehst.",
+          "dot life ist eine visuelle Lebenskalender-App, die dein Leben in Punkte verwandelt, damit du den Lauf der Zeit greifbarer verstehst.",
       },
       {
         question: "Wie funktioniert das Lebensraster?",
         answer:
-          "Du gibst dein Geburtsdatum und eine geschatzte Lebenserwartung ein. Die App zeichnet ein Raster, in dem jeder Punkt fur eine Woche, einen Monat oder ein Jahr steht.",
+          "Du gibst dein Geburtsdatum und eine geschätzte Lebenserwartung ein. Die App zeichnet ein Raster, in dem jeder Punkt für eine Woche, einen Monat oder ein Jahr steht.",
       },
       {
         question: "Werden meine Daten gespeichert?",
@@ -183,59 +183,59 @@ const seoCopy: Record<Locale, SeoCopy> = {
       },
     ],
     websiteDescription:
-      "Visualisiere, wie viel Lebenszeit du bereits gelebt hast und wie viel noch bleibt. Jeder Punkt steht fur eine Woche, einen Monat oder ein Jahr deines Lebens. Fuge Meilensteine hinzu und teile dein Raster.",
+      "Visualisiere, wie viel Lebenszeit du bereits gelebt hast und wie viel noch bleibt. Jeder Punkt steht für eine Woche, einen Monat oder ein Jahr deines Lebens. Füge Meilensteine hinzu und teile dein Raster.",
   },
   pt: {
-    label: "Life Calendar",
+    label: "Calendário de vida",
     introTitle:
-      "Um life calendar interativo para visualizar sua vida em semanas, meses ou anos",
+      "Um calendário de vida interativo para visualizar sua vida em semanas, meses ou anos",
     introBody:
-      "dot life ajuda voce a enxergar o tempo de forma concreta. Em vez de pensar sua vida como um numero abstrato, cada ponto representa uma unidade real de tempo e ajuda voce a entender melhor suas fases, decisoes e marcos pessoais.",
+      "dot life ajuda você a enxergar o tempo de forma concreta. Em vez de pensar na sua vida como um número abstrato, cada ponto representa uma unidade real de tempo e ajuda você a entender melhor suas fases, decisões e marcos pessoais.",
     benefitsTitle: "Para que serve",
     benefits: [
       "Transforme sua expectativa de vida em uma grade visual de semanas, meses ou anos.",
-      "Veja rapidamente quanto tempo voce ja viveu e quanto ainda existe pela frente.",
+      "Veja rapidamente quanto tempo você já viveu e quanto ainda existe pela frente.",
       "Adicione marcos pessoais para enxergar sua vida como uma linha do tempo real.",
     ],
     faqTitle: "Perguntas frequentes",
     faqItems: [
       {
-        question: "O que e dot life?",
+        question: "O que é dot life?",
         answer:
-          "dot life e um aplicativo visual no estilo life calendar que transforma sua vida em pontos para ajudar voce a perceber a passagem do tempo de forma mais concreta.",
+          "dot life é um aplicativo visual no estilo calendário de vida que transforma sua vida em pontos para ajudar você a perceber a passagem do tempo de forma mais concreta.",
       },
       {
         question: "Como funciona a grade da vida?",
         answer:
-          "Voce informa sua data de nascimento e uma expectativa de vida estimada. O aplicativo desenha uma grade em que cada ponto representa uma semana, um mes ou um ano.",
+          "Você informa sua data de nascimento e uma expectativa de vida estimada. O aplicativo desenha uma grade em que cada ponto representa uma semana, um mês ou um ano.",
       },
       {
-        question: "Meus dados sao armazenados?",
+        question: "Meus dados são armazenados?",
         answer:
-          "A configuracao fica salva localmente no seu navegador. Nao e preciso criar uma conta para usar o aplicativo.",
+          "A configuração fica salva localmente no seu navegador. Não é preciso criar uma conta para usar o aplicativo.",
       },
     ],
     websiteDescription:
-      "Visualize quanto da sua vida voce ja viveu e quanto ainda resta. Cada ponto representa uma semana, um mes ou um ano da sua vida. Adicione marcos e compartilhe sua grade.",
+      "Visualize quanto da sua vida você já viveu e quanto ainda resta. Cada ponto representa uma semana, um mês ou um ano da sua vida. Adicione marcos e compartilhe sua grade.",
   },
   it: {
-    label: "Life Calendar",
+    label: "Calendario della vita",
     introTitle:
-      "Un life calendar interattivo per visualizzare la tua vita in settimane, mesi o anni",
+      "Un calendario della vita interattivo per visualizzare la tua vita in settimane, mesi o anni",
     introBody:
-      "dot life ti aiuta a vedere il tempo in modo concreto. Invece di pensare alla tua vita come a un numero astratto, ogni punto rappresenta un'unita reale di tempo e ti aiuta a capire meglio fasi, decisioni e momenti importanti.",
+      "dot life ti aiuta a vedere il tempo in modo concreto. Invece di pensare alla tua vita come a un numero astratto, ogni punto rappresenta un'unità reale di tempo e ti aiuta a capire meglio fasi, decisioni e momenti importanti.",
     benefitsTitle: "A cosa serve",
     benefits: [
       "Trasforma la tua aspettativa di vita in una griglia visiva di settimane, mesi o anni.",
-      "Capisci a colpo d'occhio quanto tempo hai gia vissuto e quanto ne rimane.",
+      "Capisci a colpo d'occhio quanto tempo hai già vissuto e quanto ne rimane.",
       "Aggiungi traguardi personali per vedere la tua vita come una vera linea temporale.",
     ],
     faqTitle: "Domande frequenti",
     faqItems: [
       {
-        question: "Che cos'e dot life?",
+        question: "Che cos'è dot life?",
         answer:
-          "dot life e un'app visiva in stile life calendar che trasforma la tua vita in punti per aiutarti a percepire il tempo in modo piu tangibile.",
+          "dot life è un'app visiva in stile calendario della vita che trasforma la tua vita in punti per aiutarti a percepire il tempo in modo più tangibile.",
       },
       {
         question: "Come funziona la griglia della vita?",
@@ -249,7 +249,7 @@ const seoCopy: Record<Locale, SeoCopy> = {
       },
     ],
     websiteDescription:
-      "Visualizza quanto tempo della tua vita hai gia vissuto e quanto ne resta. Ogni punto rappresenta una settimana, un mese o un anno della tua vita. Aggiungi traguardi e condividi la tua griglia.",
+      "Visualizza quanto tempo della tua vita hai già vissuto e quanto ne resta. Ogni punto rappresenta una settimana, un mese o un anno della tua vita. Aggiungi traguardi e condividi la tua griglia.",
   },
   ja: {
     label: "Life Calendar",

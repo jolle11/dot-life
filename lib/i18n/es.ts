@@ -39,13 +39,13 @@ export const es: Translations = {
   dotToday: "Hoy — semana actual",
   gridLabel: "Cuadrícula de vida",
 
-  milestones: "Milestones",
+  milestones: "Hitos",
   addMilestone: "Añadir",
   saveMilestone: "Guardar",
-  newMilestone: "Nuevo milestone",
-  milestonePlaceholder: "Nombre del milestone...",
+  newMilestone: "Nuevo hito",
+  milestonePlaceholder: "Nombre del hito...",
   dateRange: "Rango de fechas (ej: universidad, trabajo...)",
-  noMilestones: "No hay milestones todavía",
+  noMilestones: "Todavía no hay hitos",
 
   dotShape: "Forma",
 
@@ -56,9 +56,9 @@ export const es: Translations = {
   fullMoons: "Lunas llenas vividas",
 
   keyboardShortcuts: "Atajos de teclado",
-  shortcutWeeks: "Vista semanas",
-  shortcutMonths: "Vista meses",
-  shortcutYears: "Vista años",
+  shortcutWeeks: "Vista de semanas",
+  shortcutMonths: "Vista de meses",
+  shortcutYears: "Vista de años",
   shortcutHelp: "Mostrar/ocultar esta ayuda",
   shortcutClose: "Cerrar paneles",
 
@@ -80,7 +80,7 @@ export const es: Translations = {
   colorOrange: "Naranja",
   colorYellow: "Amarillo",
   colorGreen: "Verde",
-  colorTeal: "Teal",
+  colorTeal: "Turquesa",
   colorBlue: "Azul",
   colorIndigo: "Índigo",
   colorViolet: "Violeta",

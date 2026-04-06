@@ -82,7 +82,7 @@ export default function RootLayout({
     name: SITE_NAME,
     url: SITE_URL,
     description:
-      "Visualiza cuánto tiempo has vivido y cuánto te queda en un grid de puntos interactivo.",
+      "Visualiza cuánto tiempo has vivido y cuánto te queda en una cuadrícula de puntos interactiva.",
     applicationCategory: "LifestyleApplication",
     operatingSystem: "Any",
     inLanguage: "es",

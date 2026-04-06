@@ -80,7 +80,7 @@ export const it: Translations = {
   colorOrange: "Arancione",
   colorYellow: "Giallo",
   colorGreen: "Verde",
-  colorTeal: "Foglia di tè",
+  colorTeal: "Turchese",
   colorBlue: "Blu",
   colorIndigo: "Indaco",
   colorViolet: "Viola",
