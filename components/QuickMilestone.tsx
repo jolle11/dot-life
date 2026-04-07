@@ -1,12 +1,12 @@
 "use client";
 
-import { MILESTONE_COLORS, getColorName } from "@/lib/colors";
-import { formatDate } from "@/lib/calculations";
-import { useT } from "@/lib/i18n";
-import { useFocusTrap } from "@/lib/useFocusTrap";
-import type { Milestone } from "@/lib/types";
 import { Check, X } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { formatDate } from "@/lib/calculations";
+import { getColorName, MILESTONE_COLORS } from "@/lib/colors";
+import { useT } from "@/lib/i18n";
+import type { Milestone } from "@/lib/types";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 
 interface Props {
   date: Date;
@@ -16,12 +16,24 @@ interface Props {
   dateLocale?: string;
 }
 
-export function QuickMilestone({ date, existingMilestones, onSave, onCancel, dateLocale = "es-ES" }: Props) {
+export function QuickMilestone({
+  date,
+  existingMilestones,
+  onSave,
+  onCancel,
+  dateLocale = "es-ES",
+}: Props) {
   const t = useT();
   const trapRef = useFocusTrap<HTMLDivElement>();
-  const nextColor = MILESTONE_COLORS[existingMilestones.length % MILESTONE_COLORS.length].value;
+  const nextColor =
+    MILESTONE_COLORS[existingMilestones.length % MILESTONE_COLORS.length].value;
   const [label, setLabel] = useState("");
   const [color, setColor] = useState(nextColor);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   function handleSave() {
     if (!label) return;
@@ -34,14 +46,22 @@ export function QuickMilestone({ date, existingMilestones, onSave, onCancel, dat
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" role="presentation" onClick={onCancel}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <button
+        type="button"
+        aria-label={t.shortcutClose}
+        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+        onClick={onCancel}
+      />
       <div
         ref={trapRef}
         role="dialog"
         aria-modal="true"
         aria-label={t.newMilestone}
-        className="mx-4 w-full max-w-sm rounded-xl border border-zinc-200 bg-white p-4 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
-        onClick={(e) => e.stopPropagation()}
+        className="relative mx-4 w-full max-w-sm rounded-xl border border-zinc-200 bg-white p-4 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+        onKeyDown={(e) => {
+          if (e.key === "Escape") onCancel();
+        }}
       >
         <div className="mb-3 flex items-center justify-between">
           <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
@@ -53,12 +73,15 @@ export function QuickMilestone({ date, existingMilestones, onSave, onCancel, dat
         </div>
 
         <input
+          ref={inputRef}
           type="text"
-          autoFocus
           placeholder={t.milestonePlaceholder}
           value={label}
           onChange={(e) => setLabel(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") handleSave(); if (e.key === "Escape") onCancel(); }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSave();
+            if (e.key === "Escape") onCancel();
+          }}
           className="mb-3 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
         />
 
@@ -74,10 +97,12 @@ export function QuickMilestone({ date, existingMilestones, onSave, onCancel, dat
                   ? "ring-2 ring-offset-2 ring-offset-white scale-110 dark:ring-offset-zinc-900"
                   : "hover:scale-110"
               }`}
-              style={{
-                backgroundColor: c.value,
-                "--tw-ring-color": c.value,
-              } as React.CSSProperties}
+              style={
+                {
+                  backgroundColor: c.value,
+                  "--tw-ring-color": c.value,
+                } as React.CSSProperties
+              }
             />
           ))}
         </div>
@@ -95,6 +120,7 @@ export function QuickMilestone({ date, existingMilestones, onSave, onCancel, dat
           <button
             type="button"
             onClick={onCancel}
+            aria-label={t.shortcutClose}
             className="flex items-center justify-center rounded-md border border-zinc-200 px-3 py-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-100"
           >
             <X size={14} />

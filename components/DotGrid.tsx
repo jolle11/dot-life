@@ -13,10 +13,9 @@ import {
 import {
   addUnits,
   formatDate,
-  getUnitsBetween,
   getColumnsForMode,
-  getDateForUnit,
   getTotalUnits,
+  getUnitsBetween,
   parseLocalDate,
 } from "@/lib/calculations";
 import { useT } from "@/lib/i18n";
@@ -177,9 +176,10 @@ const Dot = memo(function Dot({
         : "bg-zinc-200 dark:bg-zinc-700";
 
   return (
-    <div
-      className="relative"
-      role="gridcell"
+    <button
+      type="button"
+      className="relative appearance-none border-0 bg-transparent p-0 text-left"
+      data-dot-cell="true"
       aria-label={ariaLabel}
       aria-disabled={dot.isGhost || undefined}
       tabIndex={-1}
@@ -235,7 +235,7 @@ const Dot = memo(function Dot({
           />
         </div>
       )}
-    </div>
+    </button>
   );
 });
 
@@ -269,10 +269,6 @@ export function DotGrid({
   const totalLifeUnits = getTotalUnits(lifeExpectancy, viewMode);
   const columns = getColumnsForMode(viewMode);
   const now = new Date();
-  const lifeEndDate = useMemo(
-    () => getDateForUnit(birthDate, totalLifeUnits, viewMode),
-    [birthDate, totalLifeUnits, viewMode],
-  );
 
   const { gridStartDate, displayTotal, rowLabels } = useMemo(() => {
     if (viewMode === "years") {
@@ -346,7 +342,6 @@ export function DotGrid({
     columns,
     displayTotal,
     gridStartDate,
-    lifeEndDate,
     now,
     rowLabels,
     boundaryPosition,
@@ -397,8 +392,9 @@ export function DotGrid({
       // Move DOM focus to the cell
       const container = gridContainerRef.current;
       if (container) {
-        const cells =
-          container.querySelectorAll<HTMLElement>("[role='gridcell']");
+        const cells = container.querySelectorAll<HTMLElement>(
+          "[data-dot-cell='true']",
+        );
         cells[nextIdx]?.focus({ preventScroll: false });
       }
     },
@@ -427,17 +423,12 @@ export function DotGrid({
         case "End":
           moveFocus(displayTotal - 1);
           break;
-        case "Enter":
-        case " ":
-          if (dots[index] && !dots[index].isGhost)
-            handleDotClick(dots[index].date);
-          break;
         default:
           handled = false;
       }
       if (handled) e.preventDefault();
     },
-    [moveFocus, columns, displayTotal, dots, handleDotClick],
+    [moveFocus, columns, displayTotal],
   );
 
   // Aria labels cache
@@ -487,8 +478,7 @@ export function DotGrid({
           {/* Dots grid */}
           <div
             ref={gridContainerRef}
-            role="grid"
-            aria-label={t.gridLabel}
+            data-grid={t.gridLabel}
             className={`grid ${gapClasses[dotSize]}`}
             style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
           >
