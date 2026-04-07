@@ -4,8 +4,8 @@ import { CirclesFour } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { formatLocalDateISO } from "@/lib/calculations";
 import { useT } from "@/lib/i18n";
+import { useTodayDateInputMax } from "@/lib/useTodayDateInputMax";
 
 interface Props {
   onSubmit: (birthDate: string) => void;
@@ -14,7 +14,7 @@ interface Props {
 export function WelcomeScreen({ onSubmit }: Props) {
   const [birthDate, setBirthDate] = useState("");
   const t = useT();
-  const today = formatLocalDateISO(new Date());
+  const today = useTodayDateInputMax();
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-white p-4 dark:bg-zinc-900">

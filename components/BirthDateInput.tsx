@@ -1,8 +1,8 @@
 "use client";
 
 import { CalendarBlank } from "@phosphor-icons/react";
-import { formatLocalDateISO } from "@/lib/calculations";
 import { useT } from "@/lib/i18n";
+import { useTodayDateInputMax } from "@/lib/useTodayDateInputMax";
 
 interface Props {
   value: string;
@@ -11,7 +11,7 @@ interface Props {
 
 export function BirthDateInput({ value, onChange }: Props) {
   const t = useT();
-  const today = formatLocalDateISO(new Date());
+  const today = useTodayDateInputMax();
 
   return (
     <div className="flex w-full flex-col gap-2">

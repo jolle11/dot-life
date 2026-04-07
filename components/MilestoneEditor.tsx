@@ -2,10 +2,10 @@
 
 import { Check, PencilSimple, Plus, Trash, X } from "@phosphor-icons/react";
 import { useState } from "react";
-import { formatLocalDateISO } from "@/lib/calculations";
 import { getColorName, MILESTONE_COLORS } from "@/lib/colors";
 import { useT } from "@/lib/i18n";
 import type { Milestone } from "@/lib/types";
+import { useTodayDateInputMax } from "@/lib/useTodayDateInputMax";
 
 interface Props {
   milestones: Milestone[];
@@ -73,7 +73,7 @@ function MilestoneForm({
   const [endDate, setEndDate] = useState(initial.endDate || "");
   const [isRange, setIsRange] = useState(!!initial.endDate);
   const [color, setColor] = useState(initial.color);
-  const today = formatLocalDateISO(new Date());
+  const today = useTodayDateInputMax();
 
   function handleSave() {
     if (!label || !date) return;
