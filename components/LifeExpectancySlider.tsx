@@ -1,7 +1,7 @@
 "use client";
 
-import { useT } from "@/lib/i18n";
 import { HeartHalf } from "@phosphor-icons/react";
+import { useT } from "@/lib/i18n";
 
 interface Props {
   value: number;
@@ -19,7 +19,9 @@ export function LifeExpectancySlider({ value, onChange }: Props) {
       >
         <HeartHalf size={16} />
         {t.lifeExpectancy}{" "}
-        <span className="text-zinc-900 dark:text-zinc-100">{value} {t.years}</span>
+        <span className="text-zinc-900 dark:text-zinc-100">
+          {value} {t.years}
+        </span>
       </label>
       <input
         id="expectancy"

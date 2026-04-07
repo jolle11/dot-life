@@ -1,16 +1,10 @@
 "use client";
 
-import { MILESTONE_COLORS, getColorName } from "@/lib/colors";
+import { Check, PencilSimple, Plus, Trash, X } from "@phosphor-icons/react";
+import { useState } from "react";
+import { getColorName, MILESTONE_COLORS } from "@/lib/colors";
 import { useT } from "@/lib/i18n";
 import type { Milestone } from "@/lib/types";
-import {
-  Check,
-  PencilSimple,
-  Plus,
-  Trash,
-  X,
-} from "@phosphor-icons/react";
-import { useState } from "react";
 
 interface Props {
   milestones: Milestone[];
@@ -21,7 +15,10 @@ interface Props {
 function ColorPicker({
   value,
   onChange,
-}: { value: string; onChange: (c: string) => void }) {
+}: {
+  value: string;
+  onChange: (c: string) => void;
+}) {
   const t = useT();
   return (
     <div className="flex flex-wrap gap-3">
@@ -36,10 +33,12 @@ function ColorPicker({
               ? "ring-2 ring-offset-2 ring-offset-white scale-110 dark:ring-offset-zinc-800"
               : "hover:scale-110"
           }`}
-          style={{
-            backgroundColor: c.value,
-            "--tw-ring-color": c.value,
-          } as React.CSSProperties}
+          style={
+            {
+              backgroundColor: c.value,
+              "--tw-ring-color": c.value,
+            } as React.CSSProperties
+          }
         />
       ))}
     </div>
@@ -57,7 +56,12 @@ function MilestoneForm({
 }: {
   initial: { label: string; date: string; endDate?: string; color: string };
   birthDate: string;
-  onSave: (data: { label: string; date: string; endDate?: string; color: string }) => void;
+  onSave: (data: {
+    label: string;
+    date: string;
+    endDate?: string;
+    color: string;
+  }) => void;
   onCancel: () => void;
   submitLabel: string;
   placeholderLabel: string;
@@ -112,7 +116,10 @@ function MilestoneForm({
         <input
           type="checkbox"
           checked={isRange}
-          onChange={(e) => { setIsRange(e.target.checked); if (!e.target.checked) setEndDate(""); }}
+          onChange={(e) => {
+            setIsRange(e.target.checked);
+            if (!e.target.checked) setEndDate("");
+          }}
           className="rounded border-zinc-300 dark:border-zinc-600"
         />
         {dateRangeLabel}
@@ -147,13 +154,21 @@ export function MilestoneEditor({ milestones, onChange, birthDate }: Props) {
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  function add(data: { label: string; date: string; endDate?: string; color: string }) {
+  function add(data: {
+    label: string;
+    date: string;
+    endDate?: string;
+    color: string;
+  }) {
     const milestone: Milestone = { id: crypto.randomUUID(), ...data };
     onChange([...milestones, milestone]);
     setAdding(false);
   }
 
-  function update(id: string, data: { label: string; date: string; endDate?: string; color: string }) {
+  function update(
+    id: string,
+    data: { label: string; date: string; endDate?: string; color: string },
+  ) {
     onChange(milestones.map((m) => (m.id === id ? { ...m, ...data } : m)));
     setEditingId(null);
   }
@@ -172,7 +187,12 @@ export function MilestoneEditor({ milestones, onChange, birthDate }: Props) {
             editingId === m.id ? (
               <div key={m.id} className="w-full">
                 <MilestoneForm
-                  initial={{ label: m.label, date: m.date, endDate: m.endDate, color: m.color }}
+                  initial={{
+                    label: m.label,
+                    date: m.date,
+                    endDate: m.endDate,
+                    color: m.color,
+                  }}
                   birthDate={birthDate}
                   onSave={(data) => update(m.id, data)}
                   onCancel={() => setEditingId(null)}
@@ -194,11 +214,15 @@ export function MilestoneEditor({ milestones, onChange, birthDate }: Props) {
                   {m.label}
                 </span>
                 <span className="text-xs text-zinc-400 dark:text-zinc-500">
-                  {m.date}{m.endDate ? ` — ${m.endDate}` : ""}
+                  {m.date}
+                  {m.endDate ? ` — ${m.endDate}` : ""}
                 </span>
                 <button
                   type="button"
-                  onClick={() => { setEditingId(m.id); setAdding(false); }}
+                  onClick={() => {
+                    setEditingId(m.id);
+                    setAdding(false);
+                  }}
                   className="ml-1 text-zinc-300 transition-colors hover:text-zinc-600 dark:text-zinc-600 dark:hover:text-zinc-300"
                 >
                   <PencilSimple size={13} />
@@ -222,7 +246,9 @@ export function MilestoneEditor({ milestones, onChange, birthDate }: Props) {
           initial={{
             label: "",
             date: "",
-            color: MILESTONE_COLORS[milestones.length % MILESTONE_COLORS.length].value,
+            color:
+              MILESTONE_COLORS[milestones.length % MILESTONE_COLORS.length]
+                .value,
           }}
           birthDate={birthDate}
           onSave={add}
@@ -234,7 +260,10 @@ export function MilestoneEditor({ milestones, onChange, birthDate }: Props) {
       ) : (
         <button
           type="button"
-          onClick={() => { setAdding(true); setEditingId(null); }}
+          onClick={() => {
+            setAdding(true);
+            setEditingId(null);
+          }}
           className="flex items-center gap-1 rounded-md border border-dashed border-zinc-300 px-2.5 py-1 text-xs text-zinc-400 transition-colors hover:border-zinc-400 hover:text-zinc-600 dark:border-zinc-600 dark:text-zinc-500 dark:hover:border-zinc-500 dark:hover:text-zinc-300"
         >
           <Plus size={12} weight="bold" />

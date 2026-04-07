@@ -1,14 +1,14 @@
 "use client";
 
+import { Question, X } from "@phosphor-icons/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { BirthDateInput } from "@/components/BirthDateInput";
 import { DotShapePicker } from "@/components/DotShapePicker";
 import { LifeExpectancySlider } from "@/components/LifeExpectancySlider";
 import { ViewModeToggle } from "@/components/ViewModeToggle";
 import { useT } from "@/lib/i18n";
-import { useFocusTrap } from "@/lib/useFocusTrap";
 import type { LifeConfig } from "@/lib/types";
-import { Question, X } from "@phosphor-icons/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 
 interface Props {
   open: boolean;
@@ -18,7 +18,12 @@ interface Props {
   onShowHelp: () => void;
 }
 
-function DrawerContent({ onClose, config, onUpdate, onShowHelp }: Omit<Props, "open">) {
+function DrawerContent({
+  onClose,
+  config,
+  onUpdate,
+  onShowHelp,
+}: Omit<Props, "open">) {
   const t = useT();
   const trapRef = useFocusTrap<HTMLElement>();
 
@@ -109,7 +114,10 @@ function DrawerContent({ onClose, config, onUpdate, onShowHelp }: Omit<Props, "o
         <div className="flex justify-end border-t border-zinc-100 px-5 py-3 dark:border-zinc-800">
           <button
             type="button"
-            onClick={() => { onClose(); onShowHelp(); }}
+            onClick={() => {
+              onClose();
+              onShowHelp();
+            }}
             className="flex items-center gap-1.5 rounded-md p-1.5 text-xs text-zinc-400 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200"
             aria-label={t.keyboardShortcuts}
           >
@@ -124,8 +132,6 @@ function DrawerContent({ onClose, config, onUpdate, onShowHelp }: Omit<Props, "o
 
 export function SettingsDrawer({ open, ...rest }: Props) {
   return (
-    <AnimatePresence>
-      {open && <DrawerContent {...rest} />}
-    </AnimatePresence>
+    <AnimatePresence>{open && <DrawerContent {...rest} />}</AnimatePresence>
   );
 }

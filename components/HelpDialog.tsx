@@ -1,9 +1,9 @@
 "use client";
 
-import { useT } from "@/lib/i18n";
-import { useFocusTrap } from "@/lib/useFocusTrap";
 import { X } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useT } from "@/lib/i18n";
+import { useFocusTrap } from "@/lib/useFocusTrap";
 
 interface Props {
   open: boolean;

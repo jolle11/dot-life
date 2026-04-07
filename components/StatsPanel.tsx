@@ -1,23 +1,23 @@
 "use client";
 
-import { getStats } from "@/lib/calculations";
-import { getNumberLocale, useT } from "@/lib/i18n";
-import type { Locale } from "@/lib/i18n";
 import {
+  Bed,
+  Cake,
   Calendar,
+  CaretDown,
   Clock,
+  Heart,
   HourglassHigh,
   HourglassLow,
-  Percent,
-  Cake,
-  Timer,
-  Heart,
-  Wind,
   Moon,
-  Bed,
-  CaretDown,
+  Percent,
+  Timer,
+  Wind,
 } from "@phosphor-icons/react";
 import { type ReactNode, useEffect, useState } from "react";
+import { getStats } from "@/lib/calculations";
+import type { Locale } from "@/lib/i18n";
+import { getNumberLocale, useT } from "@/lib/i18n";
 
 interface Props {
   birthDate: Date;
@@ -29,7 +29,11 @@ function StatCard({
   icon,
   label,
   value,
-}: { icon: ReactNode; label: string; value: string }) {
+}: {
+  icon: ReactNode;
+  label: string;
+  value: string;
+}) {
   return (
     <div className="flex items-center gap-3 rounded-lg border border-zinc-200 p-3 dark:border-zinc-700">
       <div className="text-zinc-400">{icon}</div>
@@ -60,17 +64,36 @@ function diffDates(from: Date, to: Date): TimeParts {
   let minutes = to.getMinutes() - from.getMinutes();
   let seconds = to.getSeconds() - from.getSeconds();
 
-  if (seconds < 0) { seconds += 60; minutes--; }
-  if (minutes < 0) { minutes += 60; hours--; }
-  if (hours < 0) { hours += 24; days--; }
+  if (seconds < 0) {
+    seconds += 60;
+    minutes--;
+  }
+  if (minutes < 0) {
+    minutes += 60;
+    hours--;
+  }
+  if (hours < 0) {
+    hours += 24;
+    days--;
+  }
   if (days < 0) {
     const prev = new Date(to.getFullYear(), to.getMonth(), 0).getDate();
     days += prev;
     months--;
   }
-  if (months < 0) { months += 12; years--; }
+  if (months < 0) {
+    months += 12;
+    years--;
+  }
 
-  return { years: Math.max(0, years), months: Math.max(0, months), days: Math.max(0, days), hours: Math.max(0, hours), minutes: Math.max(0, minutes), seconds: Math.max(0, seconds) };
+  return {
+    years: Math.max(0, years),
+    months: Math.max(0, months),
+    days: Math.max(0, days),
+    hours: Math.max(0, hours),
+    minutes: Math.max(0, minutes),
+    seconds: Math.max(0, seconds),
+  };
 }
 
 function useLiveClocks(birthDate: Date, lifeExpectancy: number) {
@@ -118,9 +141,9 @@ export function StatsPanel({ birthDate, lifeExpectancy, locale }: Props) {
       elapsed.minutes) *
       60 +
     elapsed.seconds;
-  const heartbeats = Math.round(totalSecondsLived * (70 / 60));  // ~70 bpm
-  const breaths = Math.round(totalSecondsLived * (15 / 60));     // ~15 rpm
-  const hoursSlept = Math.round(totalSecondsLived / 3600 / 3);   // ~8h/day = 1/3 of time
+  const heartbeats = Math.round(totalSecondsLived * (70 / 60)); // ~70 bpm
+  const breaths = Math.round(totalSecondsLived * (15 / 60)); // ~15 rpm
+  const hoursSlept = Math.round(totalSecondsLived / 3600 / 3); // ~8h/day = 1/3 of time
   const fullMoons = Math.round(totalSecondsLived / (29.53 * 24 * 3600));
 
   return (
@@ -178,7 +201,8 @@ export function StatsPanel({ birthDate, lifeExpectancy, locale }: Props) {
           <p className="font-semibold tabular-nums text-base text-zinc-900 dark:text-zinc-100">
             {remaining.years}a {remaining.months}m {remaining.days}d{" "}
             <span className="text-zinc-400 dark:text-zinc-500">
-              {pad(remaining.hours)}:{pad(remaining.minutes)}:{pad(remaining.seconds)}
+              {pad(remaining.hours)}:{pad(remaining.minutes)}:
+              {pad(remaining.seconds)}
             </span>
           </p>
         </div>
@@ -194,7 +218,8 @@ export function StatsPanel({ birthDate, lifeExpectancy, locale }: Props) {
           <p className="font-semibold tabular-nums text-base text-zinc-900 dark:text-zinc-100">
             {remaining.years}a {remaining.months}m {remaining.days}d{" "}
             <span className="text-zinc-400 dark:text-zinc-500">
-              {pad(remaining.hours)}:{pad(remaining.minutes)}:{pad(remaining.seconds)}
+              {pad(remaining.hours)}:{pad(remaining.minutes)}:
+              {pad(remaining.seconds)}
             </span>
           </p>
         </div>
@@ -217,16 +242,36 @@ export function StatsPanel({ birthDate, lifeExpectancy, locale }: Props) {
         {showFunStats && (
           <div className="border-t border-zinc-200 dark:border-zinc-700 grid grid-cols-2 divide-x divide-y divide-zinc-200 dark:divide-zinc-700 sm:grid-cols-4 sm:divide-y-0">
             {[
-              { icon: <Heart size={20} />, label: t.heartbeats, value: heartbeats.toLocaleString(numLocale) },
-              { icon: <Wind size={20} />, label: t.breaths, value: breaths.toLocaleString(numLocale) },
-              { icon: <Bed size={20} />, label: t.hoursSlept, value: hoursSlept.toLocaleString(numLocale) },
-              { icon: <Moon size={20} />, label: t.fullMoons, value: fullMoons.toLocaleString(numLocale) },
+              {
+                icon: <Heart size={20} />,
+                label: t.heartbeats,
+                value: heartbeats.toLocaleString(numLocale),
+              },
+              {
+                icon: <Wind size={20} />,
+                label: t.breaths,
+                value: breaths.toLocaleString(numLocale),
+              },
+              {
+                icon: <Bed size={20} />,
+                label: t.hoursSlept,
+                value: hoursSlept.toLocaleString(numLocale),
+              },
+              {
+                icon: <Moon size={20} />,
+                label: t.fullMoons,
+                value: fullMoons.toLocaleString(numLocale),
+              },
             ].map(({ icon, label, value }) => (
               <div key={label} className="flex items-center gap-3 p-3">
                 <div className="text-zinc-400">{icon}</div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{label}</p>
-                  <p className="font-semibold tabular-nums text-base text-zinc-900 dark:text-zinc-100">{value}</p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                    {label}
+                  </p>
+                  <p className="font-semibold tabular-nums text-base text-zinc-900 dark:text-zinc-100">
+                    {value}
+                  </p>
                 </div>
               </div>
             ))}

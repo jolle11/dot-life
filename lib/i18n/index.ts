@@ -12,13 +12,24 @@ import { it } from "./it";
 import { ja } from "./ja";
 import { ko } from "./ko";
 import { pt } from "./pt";
-import { zh } from "./zh";
 import type { Locale, Translations } from "./types";
+import { zh } from "./zh";
 
 export type { Locale, Translations };
 
 export const locales: Record<Locale, Translations> = {
-  es, ca, en, fr, de, pt, it, ja, ko, zh, ar, hi,
+  es,
+  ca,
+  en,
+  fr,
+  de,
+  pt,
+  it,
+  ja,
+  ko,
+  zh,
+  ar,
+  hi,
 };
 
 export const LOCALE_STORAGE_KEY = "dot-life-locale";

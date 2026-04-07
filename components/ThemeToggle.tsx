@@ -1,8 +1,8 @@
 "use client";
 
-import { useT } from "@/lib/i18n";
-import { Moon, Sun, DeviceMobile, Check } from "@phosphor-icons/react";
+import { Check, DeviceMobile, Moon, Sun } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
+import { useT } from "@/lib/i18n";
 
 type ThemeMode = "system" | "light" | "dark";
 
@@ -38,21 +38,32 @@ export function ThemeToggle() {
       localStorage.setItem("dot-life-theme", "light");
     } else {
       localStorage.removeItem("dot-life-theme");
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
       document.documentElement.classList.toggle("dark", prefersDark);
     }
   }
 
   const icon =
-    mode === "dark" ? <Moon size={18} /> :
-    mode === "light" ? <Sun size={18} /> :
-    <DeviceMobile size={18} />;
+    mode === "dark" ? (
+      <Moon size={18} />
+    ) : mode === "light" ? (
+      <Sun size={18} />
+    ) : (
+      <DeviceMobile size={18} />
+    );
 
-  const options: { value: ThemeMode; label: string; icon: React.ReactNode }[] = [
-    { value: "system", label: t.themeSystem, icon: <DeviceMobile size={16} /> },
-    { value: "light",  label: t.themeLight,  icon: <Sun size={16} /> },
-    { value: "dark",   label: t.themeDark,   icon: <Moon size={16} /> },
-  ];
+  const options: { value: ThemeMode; label: string; icon: React.ReactNode }[] =
+    [
+      {
+        value: "system",
+        label: t.themeSystem,
+        icon: <DeviceMobile size={16} />,
+      },
+      { value: "light", label: t.themeLight, icon: <Sun size={16} /> },
+      { value: "dark", label: t.themeDark, icon: <Moon size={16} /> },
+    ];
 
   return (
     <div ref={ref} className="relative">
@@ -77,7 +88,9 @@ export function ThemeToggle() {
             >
               {opt.icon}
               <span className="flex-1 text-left">{opt.label}</span>
-              {mode === opt.value && <Check size={14} className="text-zinc-500 dark:text-zinc-400" />}
+              {mode === opt.value && (
+                <Check size={14} className="text-zinc-500 dark:text-zinc-400" />
+              )}
             </button>
           ))}
         </div>

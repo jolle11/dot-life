@@ -1,4 +1,16 @@
-export type Locale = "es" | "ca" | "en" | "fr" | "de" | "pt" | "it" | "ja" | "ko" | "zh" | "ar" | "hi";
+export type Locale =
+  | "es"
+  | "ca"
+  | "en"
+  | "fr"
+  | "de"
+  | "pt"
+  | "it"
+  | "ja"
+  | "ko"
+  | "zh"
+  | "ar"
+  | "hi";
 
 export interface Translations {
   // Welcome screen

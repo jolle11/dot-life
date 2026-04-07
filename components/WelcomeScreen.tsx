@@ -1,10 +1,10 @@
 "use client";
 
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { useT } from "@/lib/i18n";
 import { CirclesFour } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { useT } from "@/lib/i18n";
 
 interface Props {
   onSubmit: (birthDate: string) => void;
