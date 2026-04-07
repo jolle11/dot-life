@@ -2,15 +2,16 @@ import { getUnitsBetween, parseLocalDate } from "./calculations";
 import type { Milestone, ViewMode } from "./types";
 
 /**
- * Encodes the grid state into URL search params without personal data.
- * Instead of birthDate, we store age (years). Milestones are stored
+ * Encodes the grid state into URL search params.
+ * Exact birth dates preserve a faithful shared view; milestones remain stored
  * as unit offsets from birth, not absolute dates.
  */
 
 interface ShareData {
   viewMode: ViewMode;
   lifeExpectancy: number;
-  age: number;
+  birthDate?: string;
+  age?: number;
   milestones: {
     label: string;
     color: string;
@@ -26,7 +27,7 @@ export function encodeShareURL(
   milestones: Milestone[],
 ): string {
   const now = new Date();
-  // Precise age: subtract 1 if the birthday hasn't occurred yet this year
+  // Keep age for backward compatibility with older shared links/clients.
   let age = now.getFullYear() - birthDate.getFullYear();
   const monthDiff = now.getMonth() - birthDate.getMonth();
   if (
@@ -51,6 +52,7 @@ export function encodeShareURL(
   const params = new URLSearchParams();
   params.set("v", viewMode);
   params.set("e", String(lifeExpectancy));
+  params.set("b", dateToString(birthDate));
   params.set("a", String(age));
   if (encodedMilestones.length > 0) {
     params.set("m", encodedMilestones.join(","));
@@ -66,16 +68,26 @@ export function decodeShareURL(
     typeof search === "string" ? new URLSearchParams(search) : search;
   const v = params.get("v");
   const e = params.get("e");
+  const b = params.get("b");
   const a = params.get("a");
 
-  if (!v || !e || !a) return null;
+  if (!v || !e || (!b && !a)) return null;
   if (!["weeks", "months", "years"].includes(v)) return null;
 
   const viewMode = v as ViewMode;
   const lifeExpectancy = Number(e);
-  const age = Number(a);
 
-  if (Number.isNaN(lifeExpectancy) || Number.isNaN(age)) return null;
+  if (Number.isNaN(lifeExpectancy)) return null;
+
+  const birthDate =
+    b !== null && isValidShareBirthDate(b)
+      ? dateToString(parseLocalDate(b))
+      : undefined;
+  const age = a !== null ? Number(a) : undefined;
+
+  if (!birthDate && (age === undefined || Number.isNaN(age))) {
+    return null;
+  }
 
   const milestones: ShareData["milestones"] = [];
   const mParam = params.get("m");
@@ -95,21 +107,19 @@ export function decodeShareURL(
     }
   }
 
-  return { viewMode, lifeExpectancy, age, milestones };
+  return { viewMode, lifeExpectancy, birthDate, age, milestones };
 }
 
 /**
  * Converts share data into a LifeConfig-compatible structure.
- * Creates an approximate birthDate from age and converts
- * unit offsets back to approximate dates.
+ * Uses the exact birthDate when present and falls back to the old
+ * age-based approximation for legacy links.
  */
 export function shareDataToConfig(data: ShareData) {
-  const now = new Date();
-  // Approximate birthDate: just subtract age in years
-  const approxBirth = new Date(now.getFullYear() - data.age, 0, 1);
+  const birthDate = getSharedBirthDate(data);
 
   const milestones: Milestone[] = data.milestones.map((m, i) => {
-    const startDate = unitToDate(approxBirth, m.startUnit, data.viewMode);
+    const startDate = unitToDate(birthDate, m.startUnit, data.viewMode);
     const milestone: Milestone = {
       id: `shared-${i}`,
       label: m.label,
@@ -117,19 +127,33 @@ export function shareDataToConfig(data: ShareData) {
       date: dateToString(startDate),
     };
     if (m.endUnit !== undefined) {
-      const endDate = unitToDate(approxBirth, m.endUnit, data.viewMode);
+      const endDate = unitToDate(birthDate, m.endUnit, data.viewMode);
       milestone.endDate = dateToString(endDate);
     }
     return milestone;
   });
 
   return {
-    birthDate: dateToString(approxBirth),
+    birthDate: dateToString(birthDate),
     lifeExpectancy: data.lifeExpectancy,
     viewMode: data.viewMode,
     milestones,
     dotShape: "circle" as const,
   };
+}
+
+function getSharedBirthDate(data: ShareData): Date {
+  if (data.birthDate) {
+    return parseLocalDate(data.birthDate);
+  }
+
+  const now = new Date();
+  return new Date(now.getFullYear() - (data.age ?? 0), 0, 1);
+}
+
+function isValidShareBirthDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  return dateToString(parseLocalDate(value)) === value;
 }
 
 function unitToDate(birthDate: Date, unit: number, mode: ViewMode): Date {
