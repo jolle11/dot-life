@@ -20,6 +20,10 @@ interface ShareData {
   }[];
 }
 
+type SharedMilestone = ShareData["milestones"][number];
+
+const STRUCTURED_MILESTONES_PREFIX = "j:";
+
 export function encodeShareURL(
   birthDate: Date,
   lifeExpectancy: number,
@@ -37,16 +41,19 @@ export function encodeShareURL(
     age--;
   }
 
-  const encodedMilestones = milestones.map((m) => {
+  const encodedMilestones: SharedMilestone[] = milestones.map((m) => {
     const mStart = parseLocalDate(m.date);
     const startUnit = getUnitsBetween(birthDate, mStart, viewMode);
-    const parts = [m.label, m.color, String(startUnit)];
+    const encodedMilestone: SharedMilestone = {
+      label: m.label,
+      color: m.color,
+      startUnit,
+    };
     if (m.endDate) {
       const mEnd = parseLocalDate(m.endDate);
-      const endUnit = getUnitsBetween(birthDate, mEnd, viewMode);
-      parts.push(String(endUnit));
+      encodedMilestone.endUnit = getUnitsBetween(birthDate, mEnd, viewMode);
     }
-    return parts.join("~");
+    return encodedMilestone;
   });
 
   const params = new URLSearchParams();
@@ -55,7 +62,7 @@ export function encodeShareURL(
   params.set("b", dateToString(birthDate));
   params.set("a", String(age));
   if (encodedMilestones.length > 0) {
-    params.set("m", encodedMilestones.join(","));
+    params.set("m", encodeMilestonesParam(encodedMilestones));
   }
 
   return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
@@ -89,23 +96,8 @@ export function decodeShareURL(
     return null;
   }
 
-  const milestones: ShareData["milestones"] = [];
   const mParam = params.get("m");
-  if (mParam) {
-    for (const entry of mParam.split(",")) {
-      const parts = entry.split("~");
-      if (parts.length < 3) continue;
-      const [label, color, startStr, endStr] = parts;
-      const startUnit = Number(startStr);
-      if (Number.isNaN(startUnit)) continue;
-      const m: ShareData["milestones"][number] = { label, color, startUnit };
-      if (endStr !== undefined) {
-        const endUnit = Number(endStr);
-        if (!Number.isNaN(endUnit)) m.endUnit = endUnit;
-      }
-      milestones.push(m);
-    }
-  }
+  const milestones = mParam ? decodeMilestonesParam(mParam) : [];
 
   return { viewMode, lifeExpectancy, birthDate, age, milestones };
 }
@@ -177,4 +169,82 @@ function dateToString(d: Date): string {
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
+}
+
+function encodeMilestonesParam(milestones: SharedMilestone[]): string {
+  return `${STRUCTURED_MILESTONES_PREFIX}${JSON.stringify(milestones)}`;
+}
+
+function decodeMilestonesParam(value: string): SharedMilestone[] {
+  if (value.startsWith(STRUCTURED_MILESTONES_PREFIX)) {
+    return decodeStructuredMilestones(
+      value.slice(STRUCTURED_MILESTONES_PREFIX.length),
+    );
+  }
+
+  return decodeLegacyMilestones(value);
+}
+
+function decodeStructuredMilestones(value: string): SharedMilestone[] {
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.flatMap((entry) => {
+      if (!isStructuredMilestone(entry)) return [];
+
+      const milestone: SharedMilestone = {
+        label: entry.label,
+        color: entry.color,
+        startUnit: entry.startUnit,
+      };
+
+      if (entry.endUnit !== undefined) {
+        milestone.endUnit = entry.endUnit;
+      }
+
+      return [milestone];
+    });
+  } catch {
+    return [];
+  }
+}
+
+function decodeLegacyMilestones(value: string): SharedMilestone[] {
+  const milestones: SharedMilestone[] = [];
+
+  for (const entry of value.split(",")) {
+    const parts = entry.split("~");
+    if (parts.length < 3) continue;
+    const [label, color, startStr, endStr] = parts;
+    const startUnit = Number(startStr);
+    if (Number.isNaN(startUnit)) continue;
+
+    const milestone: SharedMilestone = { label, color, startUnit };
+    if (endStr !== undefined) {
+      const endUnit = Number(endStr);
+      if (!Number.isNaN(endUnit)) milestone.endUnit = endUnit;
+    }
+
+    milestones.push(milestone);
+  }
+
+  return milestones;
+}
+
+function isStructuredMilestone(value: unknown): value is SharedMilestone {
+  if (typeof value !== "object" || value === null) return false;
+
+  const maybeMilestone = value as Partial<SharedMilestone>;
+  if (typeof maybeMilestone.label !== "string") return false;
+  if (typeof maybeMilestone.color !== "string") return false;
+  if (typeof maybeMilestone.startUnit !== "number") return false;
+  if (
+    maybeMilestone.endUnit !== undefined &&
+    typeof maybeMilestone.endUnit !== "number"
+  ) {
+    return false;
+  }
+
+  return true;
 }
