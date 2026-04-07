@@ -2,7 +2,7 @@
 
 import { Check, X } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
-import { formatDate } from "@/lib/calculations";
+import { formatDate, formatLocalDateISO } from "@/lib/calculations";
 import { getColorName, MILESTONE_COLORS } from "@/lib/colors";
 import { useT } from "@/lib/i18n";
 import type { Milestone } from "@/lib/types";
@@ -40,7 +40,7 @@ export function QuickMilestone({
     onSave({
       id: crypto.randomUUID(),
       label,
-      date: date.toISOString().split("T")[0],
+      date: formatLocalDateISO(date),
       color,
     });
   }

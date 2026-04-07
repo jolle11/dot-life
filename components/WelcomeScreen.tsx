@@ -4,6 +4,7 @@ import { CirclesFour } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { formatLocalDateISO } from "@/lib/calculations";
 import { useT } from "@/lib/i18n";
 
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
 export function WelcomeScreen({ onSubmit }: Props) {
   const [birthDate, setBirthDate] = useState("");
   const t = useT();
+  const today = formatLocalDateISO(new Date());
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-white p-4 dark:bg-zinc-900">
@@ -80,7 +82,7 @@ export function WelcomeScreen({ onSubmit }: Props) {
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
               className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-base text-zinc-900 transition-colors focus:border-zinc-400 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-500"
-              max={new Date().toISOString().split("T")[0]}
+              max={today}
             />
             <button
               type="button"

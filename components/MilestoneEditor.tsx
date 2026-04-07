@@ -2,6 +2,7 @@
 
 import { Check, PencilSimple, Plus, Trash, X } from "@phosphor-icons/react";
 import { useState } from "react";
+import { formatLocalDateISO } from "@/lib/calculations";
 import { getColorName, MILESTONE_COLORS } from "@/lib/colors";
 import { useT } from "@/lib/i18n";
 import type { Milestone } from "@/lib/types";
@@ -72,6 +73,7 @@ function MilestoneForm({
   const [endDate, setEndDate] = useState(initial.endDate || "");
   const [isRange, setIsRange] = useState(!!initial.endDate);
   const [color, setColor] = useState(initial.color);
+  const today = formatLocalDateISO(new Date());
 
   function handleSave() {
     if (!label || !date) return;
@@ -94,7 +96,7 @@ function MilestoneForm({
             value={date}
             onChange={(e) => setDate(e.target.value)}
             min={birthDate}
-            max={new Date().toISOString().split("T")[0]}
+            max={today}
             className="flex-1 rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-900 focus:border-zinc-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
           />
           {isRange && (
@@ -105,7 +107,7 @@ function MilestoneForm({
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 min={date || birthDate}
-                max={new Date().toISOString().split("T")[0]}
+                max={today}
                 className="flex-1 rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-900 focus:border-zinc-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
               />
             </>
