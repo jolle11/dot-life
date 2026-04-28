@@ -64,6 +64,11 @@ export const ko: Translations = {
 
   exportChart: "차트 내보내기",
   exportError: "이미지를 내보낼 수 없습니다",
+  exportData: "데이터 내보내기",
+  exportDataError: "데이터를 내보낼 수 없습니다",
+  importData: "데이터 가져오기",
+  importDataSuccess: "데이터를 가져왔습니다",
+  importDataError: "데이터를 가져올 수 없습니다",
   shareLink: "링크 공유",
   shareLinkError: "링크를 복사할 수 없습니다",
   linkCopied: "링크 복사됨",

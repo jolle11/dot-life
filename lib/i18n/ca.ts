@@ -64,6 +64,11 @@ export const ca: Translations = {
 
   exportChart: "Exportar gràfic",
   exportError: "No s'ha pogut exportar la imatge",
+  exportData: "Exportar dades",
+  exportDataError: "No s'han pogut exportar les dades",
+  importData: "Importar dades",
+  importDataSuccess: "Dades importades",
+  importDataError: "No s'han pogut importar les dades",
   shareLink: "Compartir enllaç",
   shareLinkError: "No s'ha pogut copiar l'enllaç",
   linkCopied: "Enllaç copiat",

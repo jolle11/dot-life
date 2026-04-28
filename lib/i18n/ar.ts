@@ -64,6 +64,11 @@ export const ar: Translations = {
 
   exportChart: "تصدير الرسم",
   exportError: "تعذر تصدير الصورة",
+  exportData: "تصدير البيانات",
+  exportDataError: "تعذر تصدير البيانات",
+  importData: "استيراد البيانات",
+  importDataSuccess: "تم استيراد البيانات",
+  importDataError: "تعذر استيراد البيانات",
   shareLink: "مشاركة الرابط",
   shareLinkError: "تعذر نسخ الرابط",
   linkCopied: "تم نسخ الرابط",

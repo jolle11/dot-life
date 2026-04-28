@@ -4,13 +4,21 @@ import {
   CaretDown,
   Check,
   CirclesFour,
+  DownloadSimple,
   Export,
   LinkSimple,
   List,
+  UploadSimple,
 } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toPng } from "html-to-image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { DotGrid } from "@/components/DotGrid";
 import { Footer } from "@/components/Footer";
 import { HelpDialog } from "@/components/HelpDialog";
@@ -31,13 +39,51 @@ import {
   locales,
 } from "@/lib/i18n";
 import { decodeShareURL, encodeShareURL, shareDataToConfig } from "@/lib/share";
-import { defaultConfig, loadConfig, saveConfig } from "@/lib/storage";
+import {
+  defaultConfig,
+  loadConfig,
+  parseImportedConfig,
+  saveConfig,
+  THEME_STORAGE_KEY,
+} from "@/lib/storage";
 import type { LifeConfig, Milestone } from "@/lib/types";
 
 interface Props {
   initialConfig?: LifeConfig;
   initialSharedConfig?: LifeConfig | null;
   showSeoContent?: boolean;
+}
+
+type ThemePreference = "light" | "dark" | "system";
+type ToastTone = "error" | "success";
+
+function getStoredThemePreference(): ThemePreference {
+  const theme = localStorage.getItem(THEME_STORAGE_KEY);
+  return theme === "light" || theme === "dark" ? theme : "system";
+}
+
+function applyThemePreference(theme: ThemePreference): void {
+  if (theme === "system") {
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+    document.documentElement.classList.toggle("dark", prefersDark);
+    return;
+  }
+
+  document.documentElement.classList.toggle("dark", theme === "dark");
+}
+
+function isLocale(value: unknown): value is Locale {
+  return typeof value === "string" && value in locales;
+}
+
+function isThemePreference(value: unknown): value is ThemePreference {
+  return value === "light" || value === "dark" || value === "system";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }
 
 export function HomeClient({
@@ -58,11 +104,16 @@ export function HomeClient({
   const [locale, setLocale] = useState<Locale>("es");
   const [showHelp, setShowHelp] = useState(false);
   const [showMilestones, setShowMilestones] = useState(false);
-  const [errorToast, setErrorToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    tone: ToastTone;
+  } | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
   const clearGridHoverRef = useRef<(() => void) | null>(null);
   const swipeStartX = useRef<number | null>(null);
   const swipeStartY = useRef<number | null>(null);
+  const toastTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (initialSharedConfig) {
@@ -80,21 +131,13 @@ export function HomeClient({
       }
     }
 
-    // Apply saved theme
-    const theme = localStorage.getItem("dot-life-theme");
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else if (theme === "light") {
-      document.documentElement.classList.remove("dark");
-    }
+    const themePreference = getStoredThemePreference();
+    applyThemePreference(themePreference);
 
-    // system default: follow OS preference and keep watching for changes
+    // Follow OS preference when the user hasn't pinned a theme.
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    if (!theme) {
-      document.documentElement.classList.toggle("dark", mq.matches);
-    }
     const themeHandler = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem("dot-life-theme")) {
+      if (getStoredThemePreference() === "system") {
         document.documentElement.classList.toggle("dark", e.matches);
       }
     };
@@ -191,9 +234,27 @@ export function HomeClient({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [config, update]);
 
-  const showError = useCallback((msg: string) => {
-    setErrorToast(msg);
-    setTimeout(() => setErrorToast(null), 3000);
+  const showToast = useCallback(
+    (message: string, tone: ToastTone = "error") => {
+      if (toastTimeoutRef.current !== null) {
+        window.clearTimeout(toastTimeoutRef.current);
+      }
+
+      setToast({ message, tone });
+      toastTimeoutRef.current = window.setTimeout(() => {
+        setToast(null);
+        toastTimeoutRef.current = null;
+      }, 3000);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current !== null) {
+        window.clearTimeout(toastTimeoutRef.current);
+      }
+    };
   }, []);
 
   const exportChart = useCallback(async () => {
@@ -234,11 +295,11 @@ export function HomeClient({
         URL.revokeObjectURL(url);
       }
     } catch {
-      showError(t.exportError);
+      showToast(t.exportError);
     } finally {
       setExporting(false);
     }
-  }, [exporting, showError, t.exportError]);
+  }, [exporting, showToast, t.exportError]);
 
   const handleShare = useCallback(async () => {
     if (!config || !config.birthDate) return;
@@ -253,9 +314,82 @@ export function HomeClient({
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
     } catch {
-      showError(t.shareLinkError);
+      showToast(t.shareLinkError);
     }
-  }, [config, showError, t.shareLinkError]);
+  }, [config, showToast, t.shareLinkError]);
+
+  const exportData = useCallback(() => {
+    try {
+      const payload = {
+        app: "dot-life",
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        locale,
+        theme: getStoredThemePreference(),
+        config,
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.download = `dot-life-data-${new Date().toISOString().slice(0, 10)}.json`;
+      link.href = url;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      showToast(t.exportDataError);
+    }
+  }, [config, locale, showToast, t.exportDataError]);
+
+  const importData = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      event.target.value = "";
+      if (!file) return;
+
+      try {
+        const raw = JSON.parse(await file.text()) as unknown;
+        const nextConfig = parseImportedConfig(raw);
+        if (!nextConfig) {
+          showToast(t.importDataError);
+          return;
+        }
+
+        let nextLocale = locale;
+        let nextTheme = getStoredThemePreference();
+
+        if (isRecord(raw)) {
+          if (isLocale(raw.locale)) {
+            nextLocale = raw.locale;
+          }
+          if (isThemePreference(raw.theme)) {
+            nextTheme = raw.theme;
+          }
+        }
+
+        setSharedConfig(null);
+        setConfig(nextConfig);
+        saveConfig(nextConfig);
+        setLocale(nextLocale);
+        localStorage.setItem(LOCALE_STORAGE_KEY, nextLocale);
+
+        if (nextTheme === "system") {
+          localStorage.removeItem(THEME_STORAGE_KEY);
+        } else {
+          localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+        }
+        applyThemePreference(nextTheme);
+        setShowControls(false);
+        setShowMilestones(false);
+        setQuickMilestoneDate(null);
+        showToast(t.importDataSuccess, "success");
+      } catch {
+        showToast(t.importDataError);
+      }
+    },
+    [locale, showToast, t.importDataError, t.importDataSuccess],
+  );
 
   const isShared = sharedConfig !== null;
 
@@ -285,6 +419,14 @@ export function HomeClient({
   return (
     <I18nProvider value={t}>
       <div className="min-h-screen bg-white dark:bg-zinc-900">
+        <input
+          ref={importInputRef}
+          type="file"
+          accept="application/json,.json"
+          onChange={importData}
+          className="hidden"
+        />
+
         {/* Header */}
         <header className="sticky top-0 z-40 border-b border-zinc-100 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
@@ -326,6 +468,26 @@ export function HomeClient({
                   <Export size={18} />
                 )}
               </button>
+              {!isShared && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => importInputRef.current?.click()}
+                    className="hidden md:inline-flex items-center gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-100"
+                  >
+                    <UploadSimple size={18} />
+                    {t.importData}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={exportData}
+                    className="hidden md:inline-flex items-center gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-100"
+                  >
+                    <DownloadSimple size={18} />
+                    {t.exportData}
+                  </button>
+                </>
+              )}
               <LocalePicker value={locale} onChange={setLocale} />
               <ThemeToggle />
               {!isShared && (
@@ -449,14 +611,18 @@ export function HomeClient({
 
         {/* Error toast */}
         <AnimatePresence>
-          {errorToast && (
+          {toast && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700 shadow-lg dark:border-red-800 dark:bg-red-950 dark:text-red-300"
+              className={`fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg px-4 py-2.5 text-sm shadow-lg ${
+                toast.tone === "success"
+                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+                  : "border border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300"
+              }`}
             >
-              {errorToast}
+              {toast.message}
             </motion.div>
           )}
         </AnimatePresence>

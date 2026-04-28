@@ -64,6 +64,11 @@ export const hi: Translations = {
 
   exportChart: "चार्ट निर्यात करें",
   exportError: "छवि निर्यात नहीं हो सकी",
+  exportData: "डेटा निर्यात करें",
+  exportDataError: "डेटा निर्यात नहीं किया जा सका",
+  importData: "डेटा आयात करें",
+  importDataSuccess: "डेटा आयात हो गया",
+  importDataError: "डेटा आयात नहीं किया जा सका",
   shareLink: "लिंक साझा करें",
   shareLinkError: "लिंक कॉपी नहीं हो सका",
   linkCopied: "लिंक कॉपी किया गया",

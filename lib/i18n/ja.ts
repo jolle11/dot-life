@@ -64,6 +64,11 @@ export const ja: Translations = {
 
   exportChart: "画像を書き出す",
   exportError: "画像をエクスポートできませんでした",
+  exportData: "データを書き出す",
+  exportDataError: "データを書き出せませんでした",
+  importData: "データを読み込む",
+  importDataSuccess: "データを読み込みました",
+  importDataError: "データを読み込めませんでした",
   shareLink: "リンクを共有",
   shareLinkError: "リンクをコピーできませんでした",
   linkCopied: "リンクをコピーしました",

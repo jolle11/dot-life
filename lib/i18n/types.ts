@@ -84,6 +84,11 @@ export interface Translations {
   // Actions
   exportChart: string;
   exportError: string;
+  exportData: string;
+  exportDataError: string;
+  importData: string;
+  importDataSuccess: string;
+  importDataError: string;
   shareLink: string;
   shareLinkError: string;
   linkCopied: string;

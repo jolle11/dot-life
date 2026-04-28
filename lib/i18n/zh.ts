@@ -64,6 +64,11 @@ export const zh: Translations = {
 
   exportChart: "导出图表",
   exportError: "无法导出图片",
+  exportData: "导出数据",
+  exportDataError: "无法导出数据",
+  importData: "导入数据",
+  importDataSuccess: "数据已导入",
+  importDataError: "无法导入数据",
   shareLink: "分享链接",
   shareLinkError: "无法复制链接",
   linkCopied: "链接已复制",

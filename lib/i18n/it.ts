@@ -64,6 +64,11 @@ export const it: Translations = {
 
   exportChart: "Esporta grafico",
   exportError: "Impossibile esportare l'immagine",
+  exportData: "Esporta dati",
+  exportDataError: "Impossibile esportare i dati",
+  importData: "Importa dati",
+  importDataSuccess: "Dati importati",
+  importDataError: "Impossibile importare i dati",
   shareLink: "Condividi link",
   shareLinkError: "Impossibile copiare il link",
   linkCopied: "Link copiato",
