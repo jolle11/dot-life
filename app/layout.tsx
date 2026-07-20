@@ -100,6 +100,13 @@ export default function RootLayout({
 
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <script
+          defer
+          src="https://umamis.up.railway.app/script.js"
+          data-website-id="cfa6c1cf-c615-48b1-8f66-eba306c63a7d"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
